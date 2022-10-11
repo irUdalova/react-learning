@@ -1,4 +1,5 @@
-/* @font-face {
+
+@font-face {
   font-family: 'Roboto', sans-serif;
   src: url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');;
 }
@@ -31,6 +32,11 @@ a {
   color: white;
 }
 
+.container {
+  width: 1200px;
+  margin: 0 auto;
+}
+
 .nav-link:hover {
   color: #61dafb;
 }
@@ -38,4 +44,4 @@ a {
 .nav-link.nav-link_active {
   color: #61dafb;
 }
- */
+
