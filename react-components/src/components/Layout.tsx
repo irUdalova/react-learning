@@ -13,13 +13,19 @@ export const Layout = () => {
           end
           to="/"
         >
-          Home
+          Games
         </NavLink>
         <NavLink
           className={({ isActive }) => `nav-link ${isActive ? 'nav-link_active' : ''}`}
           to="/about"
         >
           About us
+        </NavLink>
+        <NavLink
+          className={({ isActive }) => `nav-link ${isActive ? 'nav-link_active' : ''}`}
+          to="/player"
+        >
+          Become a player
         </NavLink>
       </header>
       <main className="container">

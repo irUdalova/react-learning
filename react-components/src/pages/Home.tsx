@@ -10,7 +10,7 @@ type StateType = {
   products: ProductTypes[];
 };
 
-export default class Home extends React.Component<PropsType, StateType> {
+export default class Games extends React.Component<PropsType, StateType> {
   constructor(props: PropsType) {
     super(props);
     this.state = { search: '', products: [] };
