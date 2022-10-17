@@ -1,6 +1,6 @@
 import { Layout } from 'components/Layout';
 import About from 'pages/About';
-import Games from 'pages/Home';
+import Games from 'pages/Games';
 import NotFound from 'pages/NotFound';
 import { Player } from 'pages/Player';
 import React from 'react';

@@ -20,3 +20,13 @@ export interface ProductTypes {
   price: number;
   isPopular: boolean;
 }
+
+export interface ICard {
+  id: number;
+  url: string;
+  name: string;
+  date: string;
+  country: string;
+  isAgreeTerms: boolean;
+  isAgreePromo: boolean;
+}

@@ -19,7 +19,7 @@ export default class Games extends React.Component<PropsType, StateType> {
   private async init() {
     const products = await this.load();
     this.setState({ search: localStorage.getItem('search') || '', products });
-    console.log('this.state.products', this.state.products);
+    // console.log('this.state.products', this.state.products);
   }
 
   private async load(): Promise<ProductTypes[]> {
