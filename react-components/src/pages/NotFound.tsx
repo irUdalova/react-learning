@@ -7,8 +7,8 @@ export default function NotFound() {
     <>
       <div className="not-found">
         Page not found, go&nbsp;
-        <NavLink className="home-link" to="/home">
-          Home
+        <NavLink className="games-link" to="/games">
+          Games
         </NavLink>
       </div>
     </>

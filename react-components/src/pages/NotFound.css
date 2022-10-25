@@ -3,12 +3,12 @@
   margin-top: 30px;
 }
 
-.home-link {  
+.games-link {  
   color: #61dafb;
   transition: 0.3s;
 }
 
-.home-link:hover{
+.games-link:hover{
   color: #282c34; 
 }
 
