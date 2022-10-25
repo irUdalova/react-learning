@@ -21,7 +21,7 @@ export class Player extends React.Component<PropsPlayerType, StatePlayerType> {
   render() {
     return (
       <>
-        <div className="player-container">
+        <div>
           <PlayerForm
             onSubmit={(card: ICard) => {
               this.setState({ ...this.state, cards: [...this.state.cards, card] });

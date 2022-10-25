@@ -7,11 +7,13 @@
   flex-direction: column;
   max-width: 400px;
   gap: 30px;
-  margin: 60px auto 0;
+  margin: 0 auto;
   font-size: 16px;
   border: solid 1px #c6c6c6 ;
   padding: 30px;
   border-radius: 20px;
+  background-color: white;
+
 }
 
 .avatar-field {
@@ -24,7 +26,6 @@
   cursor: pointer;
   height: 30px;
   width: 60%;
-  /* background-color: #c6c6c6; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,7 +50,6 @@
   height: 90px;
   width: 90px;
   border-radius: 50%;
-  /* background-color: #c6c6c6; */
   border: dotted 1px #c6c6c6;
 }
 
@@ -58,9 +58,15 @@
 }
 
 .text-field__input {
+  margin-top: 5px;
   width: 100%;
   height: 30px;
 }
+
+.text-field__input::placeholder {
+  color: #282c34;
+}
+
 
 .select__label{
   margin: 0 0 5px;
@@ -81,6 +87,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  z-index: 1;
 }
 
 .switch-field__text {
@@ -157,18 +164,20 @@ input:checked + .slider:before {
   transition: .4s;
 }
 
-.submit-btn:hover {
+.submit-btn:not(:disabled):hover {
   border: solid 1px #282c34;
   background-color: #282c34;
   color: #61dafb;
 }
 
-/* player-card */
-
-.player-container {
-  width: 1200px;
-  margin: 0 auto;
+.submit-btn:disabled:hover {
+  cursor: auto;
 }
+
+.submit-btn:disabled {
+  border: solid 1px #c6c6c6;
+}
+/* player-card */
 
 .player-card {
   max-width: 290px;
@@ -183,7 +192,77 @@ input:checked + .slider:before {
 
 .player-cards {
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 30px;
+}
+
+.form__error,
+.agree__error {
+  color: red;
+  margin: 5px 0 0;
+  font-size: 14px;
+}
+
+.agree__error {
+  margin: 0 0 0 38px;
+}
+
+.form__input_error {
+  border: 1px solid red;
+  background-color: rgb(100%, 38%, 47%, 0.1);
+}
+
+/* check */
+
+.check-field__input {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
+
+.check-field__label {
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+  cursor: pointer;
+}
+
+.check-field__label::before {
+  content: '';
+  display: inline-block;
+  width: 30px;
+  height: 18px;
+  background-color: #282c34;
+  border-radius: 100000px;
+  margin-right: 0.5em;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.check-field__input:not(:disabled):active+.check-field__label::before {
+  background-color: #282c34;
+}
+
+.check-field__input:checked+.check-field__label::before,
+.check-field__input:not(:disabled):active+.check-field__label::before {
+  border-color: #61dafb;
+  background-color: #61dafb;
+}
+
+.submit-success {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #282c34;
+  color: white;
+  padding: 20px;
+  width: 400px;
+  height: auto;
+  text-align: center;
+  font-weight: 200;
+  border-radius: 5px;
+  z-index: 10;
 }
