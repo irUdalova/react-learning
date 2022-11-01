@@ -20,7 +20,7 @@ export default class Search extends React.Component<PropsValues> {
             }}
           ></button>
           <input
-            placeholder="Find your game"
+            placeholder="Find your movie"
             type="text"
             value={this.props.searchText}
             onChange={(e) => {
