@@ -1,8 +1,8 @@
 import React from 'react';
-import Search from 'components/Search';
-import { Movie } from 'components/Movie';
+import Search from 'components/search/Search';
+import { Movie } from 'components/movie/Movie';
 import { MovieTypes } from 'types';
-import { Popup } from 'components/Popup';
+import { Popup } from 'components/popup/Popup';
 import { getPopular } from 'api/popular';
 import { searchMovies } from 'api/search';
 

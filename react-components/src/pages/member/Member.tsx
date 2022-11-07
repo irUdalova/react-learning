@@ -1,17 +1,17 @@
 import React from 'react';
-import { PlayerCard } from './PlayerCard';
-import { PlayerForm } from './PlayerForm';
-import './Player.css';
+import { MemberCard } from './MemberCard';
+import { MemberForm } from './MemberForm';
 import { ICard } from 'types';
+import './Member.css';
 
-type PropsPlayerType = Record<string, unknown>;
+type PropsMemberType = Record<string, unknown>;
 
-type StatePlayerType = {
+type StateMemberType = {
   cards: ICard[];
 };
 
-export class Player extends React.Component<PropsPlayerType, StatePlayerType> {
-  constructor(props: PropsPlayerType) {
+export class Member extends React.Component<PropsMemberType, StateMemberType> {
+  constructor(props: PropsMemberType) {
     super(props);
     this.state = {
       cards: [],
@@ -22,14 +22,14 @@ export class Player extends React.Component<PropsPlayerType, StatePlayerType> {
     return (
       <>
         <div>
-          <PlayerForm
+          <MemberForm
             onSubmit={(card: ICard) => {
               this.setState({ ...this.state, cards: [...this.state.cards, card] });
             }}
           />
-          <div className="player-cards">
+          <div className="member-cards">
             {this.state.cards.map((card) => (
-              <PlayerCard key={card.id.toString()} cardData={card} />
+              <MemberCard key={card.id.toString()} cardData={card} />
             ))}
           </div>
         </div>

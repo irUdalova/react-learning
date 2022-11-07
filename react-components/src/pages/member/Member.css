@@ -50,6 +50,12 @@
   height: 90px;
   width: 90px;
   border-radius: 50%;
+  /* background-color: #c6c6c6; */
+}
+
+.avatar-img__unknown {
+  border-radius: 50%;
+  background-color: #c6c6c6;
 }
 
 .avatar-img__uploaded {
@@ -175,9 +181,9 @@ input:checked + .slider:before {
 .submit-btn:disabled {
   border: solid 1px #c6c6c6;
 }
-/* player-card */
+/* member-card */
 
-.player-card {
+.member-card {
   max-width: 290px;
   display: flex;
   flex-direction: column;
@@ -192,7 +198,7 @@ input:checked + .slider:before {
   text-align: center;
 }
 
-.player-cards {
+.member-cards {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;

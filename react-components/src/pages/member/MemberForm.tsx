@@ -1,8 +1,8 @@
 import React from 'react';
 import { ICard } from 'types';
-import './Player.css';
+import './Member.css';
 
-type PropsPlayerType = {
+type PropsMemberType = {
   onSubmit: (cardData: ICard) => void;
 };
 
@@ -13,15 +13,15 @@ type ErrorsType = {
   agreeError: boolean;
 };
 
-type StatePlayerType = {
+type StateMemberType = {
   url: string;
   errors: ErrorsType;
   submitSuccess: boolean;
 };
 
-export class PlayerForm extends React.Component<PropsPlayerType, StatePlayerType> {
+export class MemberForm extends React.Component<PropsMemberType, StateMemberType> {
   private checkRef: React.RefObject<HTMLInputElement>;
-  constructor(props: PropsPlayerType) {
+  constructor(props: PropsMemberType) {
     super(props);
     this.state = {
       url: '',
@@ -135,7 +135,7 @@ export class PlayerForm extends React.Component<PropsPlayerType, StatePlayerType
         <form
           className="form"
           onSubmit={this.onSubmit.bind(this)}
-          id="form-player"
+          id="form-member"
           onChange={(e) => {
             console.log('form change', e);
           }}
@@ -144,6 +144,14 @@ export class PlayerForm extends React.Component<PropsPlayerType, StatePlayerType
             <div className="avatar-img">
               {this.state.url && (
                 <img className="avatar-img__uploaded" width={90} height={90} src={this.state.url} />
+              )}
+              {!this.state.url && (
+                <img
+                  className="avatar-img__unknown"
+                  width={90}
+                  height={90}
+                  src="assets/svg/user.svg"
+                />
               )}
             </div>
             <input

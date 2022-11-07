@@ -1,17 +1,17 @@
 import React from 'react';
 import { ICard } from 'types';
-import './Player.css';
+import './Member.css';
 
 type CardsValues = {
   cardData: ICard;
 };
 
-export class PlayerCard extends React.Component<CardsValues> {
+export class MemberCard extends React.Component<CardsValues> {
   render() {
     const { url, name, date, country, isAgreeTerms, isAgreePromo } = this.props.cardData;
     return (
       <>
-        <div className="player-card">
+        <div className="member-card">
           <div className="avatar-img">
             <img
               className="avatar-img__uploaded"

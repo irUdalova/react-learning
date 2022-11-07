@@ -23,7 +23,7 @@ export const Layout = () => {
         </NavLink>
         <NavLink
           className={({ isActive }) => `nav-link ${isActive ? 'nav-link_active' : ''}`}
-          to="/player"
+          to="/member"
         >
           Become a member
         </NavLink>

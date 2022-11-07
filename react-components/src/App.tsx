@@ -1,8 +1,8 @@
-import { Layout } from 'components/Layout';
-import About from 'pages/About';
+import { Layout } from 'components/layout/Layout';
+import About from 'pages/about/About';
 import { Movies } from 'pages/Movies';
-import NotFound from 'pages/NotFound';
-import { Player } from 'pages/Player';
+import NotFound from 'pages/notFound/NotFound';
+import { Member } from 'pages/member/Member';
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
@@ -13,7 +13,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Movies />} />
           <Route path="/about" element={<About />} />
-          <Route path="/player" element={<Player />} />
+          <Route path="/member" element={<Member />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
