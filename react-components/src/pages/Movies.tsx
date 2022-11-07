@@ -3,60 +3,55 @@ import Search from 'components/Search';
 import { Movie } from 'components/Movie';
 import { MovieTypes } from 'types';
 import { Popup } from 'components/Popup';
+import { getPopular } from 'api/popular';
+import { searchMovies } from 'api/search';
 
 type PropsType = Record<string, unknown>;
 
 type StateType = {
   search: string;
+  isSearching: boolean;
   movies: MovieTypes[];
   isPopupOpen: boolean;
   popupMovieID: number;
+  totalResults: number;
 };
 
 export class Movies extends React.Component<PropsType, StateType> {
   constructor(props: PropsType) {
     super(props);
-    this.state = { search: '', movies: [], isPopupOpen: false, popupMovieID: 0 };
+    this.state = {
+      search: '',
+      isSearching: false,
+      movies: [],
+      isPopupOpen: false,
+      popupMovieID: 0,
+      totalResults: 0,
+    };
   }
 
   private async init() {
-    const movies = await this.load();
-    this.setState({ search: localStorage.getItem('search') || '', movies });
-    // console.log('this.state.movies', this.state.movies);
+    // console.log('init');
+    const { results } = await getPopular({ page: 1 });
+    this.setState({
+      ...this.setState,
+      movies: results,
+    });
+    // console.log('this.state.movies', this.state.movies, totalResults);
   }
 
-  private async load(): Promise<MovieTypes[]> {
-    // const res = await fetch('/assets/data/data.json');
-    const res = await fetch(
-      'https://api.themoviedb.org/3/search/movie?api_key=fe7b5b02805cfd0625f13336e010ba98&language=en-US&query=Christmas&page=1&include_adult=false'
-    );
-    const movies = await res.json();
-    console.log('movies', movies.results);
-
-    return movies.results;
+  private async search(searchParam: string): Promise<void> {
+    // const searchPath = generatePath('/?s=:search', { search: searchParam });
+    // console.log('aaa', searchPath);
+    const { results, total_results: totalResults } = await searchMovies({ page: 1, searchParam });
+    this.setState({ ...this.state, movies: results, totalResults, isSearching: true });
   }
 
   componentDidMount() {
     this.init();
   }
 
-  componentDidUpdate(prevState: PropsType) {
-    if (this.state.search !== prevState.search) {
-      localStorage.setItem('search', this.state.search);
-    }
-  }
-
-  get filteredMovies(): MovieTypes[] {
-    if (!this.state.search) {
-      return this.state.movies;
-    }
-    return this.state.movies.filter((mov) => {
-      return mov.title.toLowerCase().includes(this.state.search.toLocaleLowerCase());
-    });
-  }
-
   render() {
-    const filteredMovies = this.filteredMovies;
     return (
       <>
         <Search
@@ -64,13 +59,18 @@ export class Movies extends React.Component<PropsType, StateType> {
           onChange={(text: string) => {
             this.setState({ search: text });
           }}
+          onSearch={() => {
+            this.search(this.state.search);
+          }}
         />
+        {/* {this.state.isSearching && (
+          <div className="search-results">
+            {`We have ${this.state.totalResults} results for "${this.state.search}"`}
+          </div>
+        )} */}
         <div className="movies">
           <div className="movies-wrap">
-            {!filteredMovies.length && (
-              <div className="movies-wrap__msg">Sorry, no matches found</div>
-            )}
-            {filteredMovies.map((mov) => (
+            {this.state.movies.map((mov) => (
               <Movie
                 key={mov.id.toString()}
                 movie={mov}

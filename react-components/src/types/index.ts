@@ -29,10 +29,6 @@ export interface MovieTypes {
   overview?: string;
 }
 
-// export interface MoviePopupTypes extends MovieTypes {
-//   overview: string;
-// }
-
 export interface ICard {
   id: number;
   url: string;
@@ -41,4 +37,11 @@ export interface ICard {
   country: string;
   isAgreeTerms: boolean;
   isAgreePromo: boolean;
+}
+
+export interface MovieResponse {
+  page: number;
+  results: MovieTypes[];
+  total_results: number;
+  total_pages: number;
 }

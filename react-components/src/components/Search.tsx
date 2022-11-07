@@ -4,6 +4,8 @@ import './Search.css';
 type PropsValues = {
   searchText: string;
   onChange: (text: string) => void;
+  // onSearch: (text: string) => void;
+  onSearch: () => void;
 };
 
 export default class Search extends React.Component<PropsValues> {
@@ -25,6 +27,12 @@ export default class Search extends React.Component<PropsValues> {
             value={this.props.searchText}
             onChange={(e) => {
               this.props.onChange(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                console.log('search new movies');
+                this.props.onSearch();
+              }
             }}
             className="search-wrap__search-inp"
             autoComplete="off"
