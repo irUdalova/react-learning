@@ -1,0 +1,41 @@
+/* @font-face {
+  font-family: 'Roboto', sans-serif;
+  src: url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+.header {
+  background-color: #282c34; 
+  height: 60px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.nav-link {
+  color: white;
+  font-size: 1rem;
+  font-weight: 200; 
+  transition: 0.3s;
+}
+
+.nav-link:visited {
+  color: white;
+}
+
+.nav-link:hover {
+  color: #61dafb;
+}
+
+.nav-link.nav-link_active {
+  color: #61dafb;
+}
+ */
