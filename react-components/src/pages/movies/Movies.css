@@ -1,0 +1,17 @@
+.movies {
+  margin-top: 60px;
+}
+
+.movies-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 10px;
+}
+
+.search-results {
+  margin-top: 30px;
+  text-align: center;
+  color: white;
+  font-weight: 200;
+}
