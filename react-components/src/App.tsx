@@ -1,6 +1,6 @@
 import { Layout } from 'components/layout/Layout';
 import About from 'pages/about/About';
-import { Movies } from 'pages/Movies';
+import { Movies } from 'pages/movies/Movies';
 import NotFound from 'pages/notFound/NotFound';
 import { Member } from 'pages/member/Member';
 import React from 'react';

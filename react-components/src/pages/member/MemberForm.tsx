@@ -61,7 +61,7 @@ export class MemberForm extends React.Component<PropsMemberType, StateMemberType
       setTimeout(this.reset, 2000, form);
     }
 
-    console.log('isSeccess', this.state.submitSuccess);
+    // console.log('isSeccess', this.state.submitSuccess);
   }
 
   validation = (form: HTMLFormElement) => {

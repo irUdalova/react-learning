@@ -5,6 +5,8 @@ import { MovieTypes } from 'types';
 import { Popup } from 'components/popup/Popup';
 import { getPopular } from 'api/popular';
 import { searchMovies } from 'api/search';
+import './Movies.css';
+import { Loader } from 'components/loader/Loader';
 
 type PropsType = Record<string, unknown>;
 
@@ -15,6 +17,8 @@ type StateType = {
   isPopupOpen: boolean;
   popupMovieID: number;
   totalResults: number;
+  isError: boolean;
+  isLoading: boolean;
 };
 
 export class Movies extends React.Component<PropsType, StateType> {
@@ -27,24 +31,44 @@ export class Movies extends React.Component<PropsType, StateType> {
       isPopupOpen: false,
       popupMovieID: 0,
       totalResults: 0,
+      isError: false,
+      isLoading: false,
     };
   }
 
   private async init() {
+    this.setState({ ...this.state, isError: false, isLoading: true });
     // console.log('init');
-    const { results } = await getPopular({ page: 1 });
-    this.setState({
-      ...this.setState,
-      movies: results,
-    });
+    try {
+      const { results } = await getPopular({ page: 1 });
+      this.setState({
+        ...this.setState,
+        movies: results,
+        isLoading: false,
+      });
+    } catch {
+      this.setState({ ...this.state, isError: true });
+    }
     // console.log('this.state.movies', this.state.movies, totalResults);
   }
 
   private async search(searchParam: string): Promise<void> {
+    this.setState({ ...this.state, isError: false, isLoading: true });
     // const searchPath = generatePath('/?s=:search', { search: searchParam });
     // console.log('aaa', searchPath);
-    const { results, total_results: totalResults } = await searchMovies({ page: 1, searchParam });
-    this.setState({ ...this.state, movies: results, totalResults, isSearching: true });
+    try {
+      const { results, total_results: totalResults } = await searchMovies({ page: 1, searchParam });
+      console.log('movies', results);
+      this.setState({
+        ...this.state,
+        movies: results,
+        totalResults,
+        isSearching: true,
+        isLoading: false,
+      });
+    } catch {
+      this.setState({ ...this.state, isError: true });
+    }
   }
 
   componentDidMount() {
@@ -54,6 +78,7 @@ export class Movies extends React.Component<PropsType, StateType> {
   render() {
     return (
       <>
+        {this.state.isLoading && <Loader />}
         <Search
           searchText={this.state.search}
           onChange={(text: string) => {
@@ -68,6 +93,12 @@ export class Movies extends React.Component<PropsType, StateType> {
             {`We have ${this.state.totalResults} results for "${this.state.search}"`}
           </div>
         )} */}
+        {this.state.isError && (
+          <div className="search-results">{'Something went wrong, please try again!'}</div>
+        )}
+        {!this.state.movies.length && !this.state.isError && (
+          <div className="search-results">{'No movies found, please try again!'}</div>
+        )}
         <div className="movies">
           <div className="movies-wrap">
             {this.state.movies.map((mov) => (
