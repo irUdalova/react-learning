@@ -1,9 +1,9 @@
 import React from 'react';
-import { ICard } from 'types';
+import { CardType } from 'types';
 import './Member.css';
 
 type CardsValues = {
-  cardData: ICard;
+  cardData: CardType;
 };
 
 export class MemberCard extends React.Component<CardsValues> {

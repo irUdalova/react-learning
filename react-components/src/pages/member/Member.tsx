@@ -1,13 +1,13 @@
 import React from 'react';
 import { MemberCard } from './MemberCard';
 import { MemberForm } from './MemberForm';
-import { ICard } from 'types';
+import { CardType } from 'types';
 import './Member.css';
 
 type PropsMemberType = Record<string, unknown>;
 
 type StateMemberType = {
-  cards: ICard[];
+  cards: CardType[];
 };
 
 export class Member extends React.Component<PropsMemberType, StateMemberType> {
@@ -23,7 +23,7 @@ export class Member extends React.Component<PropsMemberType, StateMemberType> {
       <>
         <div>
           <MemberForm
-            onSubmit={(card: ICard) => {
+            onSubmit={(card: CardType) => {
               this.setState({ ...this.state, cards: [...this.state.cards, card] });
             }}
           />

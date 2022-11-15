@@ -1,9 +1,9 @@
 import React from 'react';
-import { ICard } from 'types';
+import { CardType } from 'types';
 import './Member.css';
 
 type PropsMemberType = {
-  onSubmit: (cardData: ICard) => void;
+  onSubmit: (cardData: CardType) => void;
 };
 
 type ErrorsType = {
