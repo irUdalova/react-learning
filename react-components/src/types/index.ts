@@ -21,7 +21,7 @@
 //   isPopular: boolean;
 // }
 
-export interface MovieTypes {
+export interface MovieTypeResp {
   id: number;
   title: string;
   poster_path: string;
@@ -29,7 +29,29 @@ export interface MovieTypes {
   overview?: string;
 }
 
-export interface ICard {
+export interface GetMovieResp {
+  page: number;
+  results: MovieTypeResp[];
+  total_results: number;
+  total_pages: number;
+}
+
+export interface MovieType {
+  id: number;
+  title: string;
+  posterPath: string;
+  releaseDate: string;
+  overview?: string;
+}
+
+export interface MoviesData {
+  page: number;
+  results: MovieType[];
+  totalResults: number;
+  totalPages: number;
+}
+
+export interface CardType {
   id: number;
   url: string;
   name: string;
@@ -37,11 +59,4 @@ export interface ICard {
   country: string;
   isAgreeTerms: boolean;
   isAgreePromo: boolean;
-}
-
-export interface MovieResponse {
-  page: number;
-  results: MovieTypes[];
-  total_results: number;
-  total_pages: number;
 }
