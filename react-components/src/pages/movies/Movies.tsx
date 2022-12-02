@@ -1,68 +1,51 @@
-import React, { useEffect, useState } from 'react';
+// /* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useContext, useEffect } from 'react';
 import { Search } from 'components/search/Search';
 import { Movie } from 'components/movie/Movie';
-import { MovieType } from 'types';
 import { Popup } from 'components/popup/Popup';
 import { getPopular } from 'api/popular';
 import { searchMovies } from 'api/search';
 import './Movies.css';
 import { Loader } from 'components/loader/Loader';
-
-type StateType = {
-  search: string;
-  isSearching: boolean;
-  movies: MovieType[];
-  isPopupOpen: boolean;
-  popupMovieID: number;
-  totalResults: number;
-  isError: boolean;
-  isLoading: boolean;
-};
+import { AppDispatchContext, AppStateContext } from 'App';
+import { MovieType } from 'types';
+import {
+  ERROR,
+  LOADING,
+  LOAD_DATA,
+  LOAD_SEARCH_DATA,
+  POPUP_CLOSE,
+  POPUP_OPEN,
+  SEARCH,
+} from 'constants/actions';
 
 export function Movies() {
-  const [state, setState] = useState<StateType>({
-    search: '',
-    isSearching: false,
-    movies: [],
-    isPopupOpen: false,
-    popupMovieID: 0,
-    totalResults: 0,
-    isError: false,
-    isLoading: false,
-  });
+  const { mainPage: state } = useContext(AppStateContext);
+  const dispatch = useContext(AppDispatchContext);
 
   useEffect(() => {
-    setState((currentState: StateType) => ({ ...currentState, isError: false, isLoading: true }));
+    dispatch({ type: LOADING });
+
     try {
-      console.log('old movies');
+      if (state.search) {
+        search(state.search);
+      }
       getPopular({ page: 1 }).then(({ results }) => {
-        setState((currentState: StateType) => ({
-          ...currentState,
-          movies: results,
-          isLoading: false,
-        }));
+        dispatch({ type: LOAD_DATA, payload: { results } });
       });
     } catch {
-      setState((currentState: StateType) => ({ ...currentState, isError: true }));
+      dispatch({ type: ERROR });
     }
   }, []);
 
   async function search(searchParam: string): Promise<void> {
-    setState({ ...state, isError: false, isLoading: true });
-    // const searchPath = generatePath('/?s=:search', { search: searchParam });
-    // console.log('aaa', searchPath);
+    dispatch({ type: LOADING });
+
     try {
       const { results, totalResults } = await searchMovies({ page: 1, searchParam });
-      console.log('movies', results);
-      setState({
-        ...state,
-        movies: results,
-        totalResults,
-        isSearching: true,
-        isLoading: false,
-      });
+      dispatch({ type: LOAD_SEARCH_DATA, payload: { results, totalResults } });
     } catch {
-      setState({ ...state, isError: true });
+      dispatch({ type: ERROR });
     }
   }
 
@@ -72,7 +55,7 @@ export function Movies() {
       <Search
         searchText={state.search}
         onChange={(text: string) => {
-          setState({ ...state, search: text });
+          dispatch({ type: SEARCH, payload: { search: text } });
         }}
         onSearch={() => {
           search(state.search);
@@ -87,19 +70,25 @@ export function Movies() {
       )}
       <div className="movies">
         <div className="movies-wrap">
-          {state.movies.map((mov) => (
+          {state.movies.map((mov: MovieType) => (
             <Movie
               key={mov.id.toString()}
               movie={mov}
-              onMovieClick={() => setState({ ...state, isPopupOpen: true, popupMovieID: mov.id })}
+              onMovieClick={() => {
+                dispatch({ type: POPUP_OPEN, payload: { popupMovieID: mov.id } });
+              }}
             />
           ))}
         </div>
       </div>
       {state.isPopupOpen && (
         <Popup
-          movie={state.movies.find((mov) => mov.id === state.popupMovieID) || state.movies[0]}
-          onClose={() => setState({ ...state, isPopupOpen: false, popupMovieID: 0 })}
+          movie={
+            state.movies.find((mov: MovieType) => mov.id === state.popupMovieID) || state.movies[0]
+          }
+          onClose={() => {
+            dispatch({ type: POPUP_CLOSE });
+          }}
         />
       )}
     </>

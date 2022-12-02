@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
+import { AppDispatchContext, AppStateContext } from 'App';
+import {
+  AGREE_PROMO,
+  AGREE_TERMS,
+  CHANGE_COUNTRY,
+  CHANGE_DATE,
+  CHANGE_NAME,
+  FORM_RESET,
+  FORM_SUBMIT,
+  FORM_SUBMIT_SUC,
+  SET_URL_IMG,
+} from 'constants/actions';
+import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
-import { CardType } from 'types';
 import './Member.css';
-
-type PropsMemberType = {
-  onSubmitForm: (cardData: CardType) => void;
-};
 
 type FormDataType = {
   userName: string;
@@ -15,63 +22,82 @@ type FormDataType = {
   userPromo: boolean;
 };
 
-export function MemberForm({ onSubmitForm }: PropsMemberType) {
-  const [urlImg, setUrlImg] = useState('');
-  const [submitSuccess, setSubmitSuccess] = useState(false);
+// formPage: {
+//   cards: [],
+//   cardForm: {
+//     url: '',
+//     name: '',
+//     date: '',
+//     country: '',
+//     isAgreeTerms: false,
+//     isAgreePromo: false,
+//   },
+//   submitSuccess: false,
+// },
+
+export function MemberForm() {
+  const { formPage: state } = useContext(AppStateContext);
+  const dispatch = useContext(AppDispatchContext);
+  const { name, date, country, isAgreeTerms, isAgreePromo } = state.cardForm;
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<FormDataType>({
-    defaultValues: {
-      userAgree: false,
-    },
-  });
+  } = useForm<FormDataType>({});
 
   const handleChangeFile = (file: Blob) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      localStorage.setItem('avatar', reader.result as string);
-      setUrlImg(reader.result as string);
+      dispatch({ type: SET_URL_IMG, payload: { url: reader.result } });
+      console.log('state.cardForm.urlImg', state.cardForm.url);
     };
+  };
+
+  const resetForm = () => {
+    dispatch({ type: FORM_RESET });
+    reset();
+    // console.log('stateafterreset', state);
   };
 
   const onSubmit = (data: FormDataType) => {
     const cardData = {
       id: Math.random(),
-      url: urlImg || '',
+      url: state.cardForm.url || '',
       name: data.userName,
       date: data.userDate,
       country: data.userCountry,
       isAgreeTerms: data.userAgree,
       isAgreePromo: data.userPromo,
     };
-    onSubmitForm(cardData);
+    dispatch({ type: FORM_SUBMIT, payload: { formData: cardData } });
 
     if (cardData) {
-      setSubmitSuccess(true);
+      dispatch({ type: FORM_SUBMIT_SUC });
       setTimeout(resetForm, 2000);
     }
   };
 
-  const resetForm = () => {
-    setUrlImg('');
-    reset();
-    setSubmitSuccess(false);
-  };
-
   return (
     <>
-      {submitSuccess && (
+      {console.log('state', state)}
+      {state.submitSuccess && (
         <div className="submit-success">Your data has been successfully saved!</div>
       )}
       <form className="form" onSubmit={handleSubmit(onSubmit)} id="form-member">
         <div className="avatar-field">
           <div className="avatar-img">
-            {urlImg && <img className="avatar-img__uploaded" width={90} height={90} src={urlImg} />}
-            {!urlImg && (
+            {state.cardForm.url && (
+              <img
+                className="avatar-img__uploaded"
+                width={90}
+                height={90}
+                src={state.cardForm.url}
+              />
+            )}
+            {!state.cardForm.url && (
               <img
                 className="avatar-img__unknown"
                 width={90}
@@ -103,7 +129,13 @@ export function MemberForm({ onSubmitForm }: PropsMemberType) {
             className={`text-field__input ${errors?.userName ? 'form__input_error' : ''}`}
             type="text"
             id="userName"
-            {...register('userName', { required: 'Please, enter your name!' })}
+            {...register('userName', {
+              required: 'Please, enter your name!',
+              onChange: (e) => {
+                dispatch({ type: CHANGE_NAME, payload: { name: e.target.value } });
+              },
+              value: name,
+            })}
             placeholder="User Name"
           />
           {errors?.userName && <p className="form__error">{`${errors?.userName?.message}`}</p>}
@@ -117,7 +149,13 @@ export function MemberForm({ onSubmitForm }: PropsMemberType) {
             className={`text-field__input ${errors.userDate ? 'form__input_error' : ''}`}
             type="date"
             id="date"
-            {...register('userDate', { required: 'Please, enter your date of birth!' })}
+            {...register('userDate', {
+              required: 'Please, enter your date of birth!',
+              onChange: (e) => {
+                dispatch({ type: CHANGE_DATE, payload: { date: e.target.value } });
+              },
+              value: date,
+            })}
           />
           {errors?.userDate && <p className="form__error">{`${errors?.userDate?.message}`}</p>}
         </div>
@@ -126,8 +164,13 @@ export function MemberForm({ onSubmitForm }: PropsMemberType) {
           <p className="select__label">Countries</p>
           <select
             className={`select ${errors.userCountry ? 'form__input_error' : ''} `}
-            {...register('userCountry', { required: 'Please, choose your country!' })}
-            defaultValue={''}
+            {...register('userCountry', {
+              required: 'Please, choose your country!',
+              onChange: (e) => {
+                dispatch({ type: CHANGE_COUNTRY, payload: { country: e.target.value } });
+              },
+              value: country,
+            })}
           >
             <option value="" disabled className="select__placeholder">
               Select your option
@@ -145,7 +188,13 @@ export function MemberForm({ onSubmitForm }: PropsMemberType) {
             className="check-field__input"
             type="checkbox"
             id="userAgree"
-            {...register('userAgree', { required: 'You must agree with the rules!' })}
+            {...register('userAgree', {
+              required: 'You must agree with the rules!',
+              onChange: (e) => {
+                dispatch({ type: AGREE_TERMS, payload: { isAgreeTerms: e.target.value } });
+              },
+              value: isAgreeTerms,
+            })}
             defaultChecked={false}
           />
           <label className="check-field__label" htmlFor="userAgree">
@@ -156,7 +205,15 @@ export function MemberForm({ onSubmitForm }: PropsMemberType) {
 
         <div className="switch-field">
           <label className="switch">
-            <input type="checkbox" {...register('userPromo')} />
+            <input
+              type="checkbox"
+              {...register('userPromo', {
+                onChange: (e) => {
+                  dispatch({ type: AGREE_PROMO, payload: { isAgreePromo: e.target.value } });
+                },
+                value: isAgreePromo,
+              })}
+            />
             <span className="slider round"></span>
           </label>
           <p className="switch-field__text">I want to receive notifications about promo</p>

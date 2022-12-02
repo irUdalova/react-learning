@@ -1,22 +1,19 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { MemberCard } from './MemberCard';
 import { MemberForm } from './MemberForm';
-import { CardType } from 'types';
+import { ICardType } from 'types';
 import './Member.css';
+import { AppStateContext } from 'App';
 
 export function Member() {
-  const [cards, setCards] = useState<CardType[]>([]);
+  const { formPage: state } = useContext(AppStateContext);
 
   return (
     <>
       <div>
-        <MemberForm
-          onSubmitForm={(card: CardType) => {
-            setCards([...cards, card]);
-          }}
-        />
+        <MemberForm />
         <div className="member-cards">
-          {cards.map((card) => (
+          {state.cards.map((card: ICardType) => (
             <MemberCard key={card.id.toString()} cardData={card} />
           ))}
         </div>

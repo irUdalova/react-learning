@@ -1,26 +1,3 @@
-// export type StateType = {
-//   search: string;
-// };
-
-// export type PropsType = Record<string, unknown>;
-
-// export type PropsValues = {
-//   searchText: string;
-//   onChange: (text: string) => void;
-// };
-
-// export interface MovieTypes {
-//   id: number;
-//   img: string;
-//   name: string;
-//   bestfor: string;
-//   producer: string;
-//   type: string;
-//   amount: number;
-//   price: number;
-//   isPopular: boolean;
-// }
-
 export interface MovieTypeResp {
   id: number;
   title: string;
@@ -60,3 +37,70 @@ export interface CardType {
   isAgreeTerms: boolean;
   isAgreePromo: boolean;
 }
+
+//======================use reducer===================
+
+export interface IMovie {
+  search: string;
+  isSearching: boolean;
+  movies: MovieType[];
+  isPopupOpen: boolean;
+  popupMovieID: number;
+  totalResults: number;
+  isError: boolean;
+  isLoading: boolean;
+}
+
+export interface ICardType {
+  id: number;
+  url: string;
+  name: string;
+  date: string;
+  country: string;
+  isAgreeTerms: boolean;
+  isAgreePromo: boolean;
+}
+
+export interface IForm {
+  cards: ICardType[];
+  cardForm: ICardType;
+  submitSuccess: boolean;
+}
+
+export interface IState {
+  mainPage: IMovie;
+  formPage: IForm;
+}
+
+export interface IAppStateContextParam {
+  state: IState;
+}
+
+export interface IAppDispatchContextParam {
+  dispatch: React.Dispatch<unknown>;
+}
+
+export type TPayload = {
+  results: IMovie[];
+  totalResults: number;
+  search: string;
+  popupMovieID: number;
+  formData: ICardType;
+  url: string;
+  date: string;
+  name: string;
+  country: string;
+  isAgreeTerms: boolean;
+  isAgreePromo: boolean;
+};
+
+export type TActionMainReducer = {
+  type: string;
+  payload: TPayload;
+};
+
+//   name: '',
+//   date: '',
+//   country: '',
+//   isAgreeTerms: false,
+//   isAgreePromo: false,

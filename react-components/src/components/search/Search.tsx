@@ -28,7 +28,7 @@ export function Search({ searchText, onChange, onSearch }: PropsValues) {
           }}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
-              console.log('search new movies');
+              // console.log('search new movies');
               onSearch();
             }
           }}
