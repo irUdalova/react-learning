@@ -1,11 +1,11 @@
 // /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useContext, useEffect, useRef } from 'react';
 import { Search } from 'components/search/Search';
-import { Sort } from 'components/sort/Sort';
 import { Movie } from 'components/movie/Movie';
 import { Popup } from 'components/popup/Popup';
-import { getPopular } from 'api/popular';
-import './Movies.css';
+import { searchMovies } from 'api/search';
+import '../movies/Movies';
+import '../movies/Movies.css';
 import { Loader } from 'components/loader/Loader';
 import { AppDispatchContext, AppStateContext } from 'App';
 import { MovieType } from 'types';
@@ -13,30 +13,28 @@ import {
   ERROR,
   LOADED,
   LOADING,
-  LOAD_DATA,
-  LOAD_SORT_DATA,
+  LOAD_SEARCH_DATA,
   POPUP_CLOSE,
   POPUP_OPEN,
   SEARCH,
-  SORT,
 } from 'constants/actions';
-import { sortMovies } from 'api/sort';
+import { useSearchParams } from 'react-router-dom';
 
-export function Movies() {
+export function SearchPage() {
   const { mainPage: state } = useContext(AppStateContext);
   const dispatch = useContext(AppDispatchContext);
+
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('search');
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (state.sort) {
+    if (searchQuery) {
       dispatch({ type: LOADING });
 
-      sortMovies({ page: 1, sortParam: state.sort })
+      searchMovies({ page: 1, searchParam: searchQuery })
         .then(({ results, totalResults }) => {
-          dispatch({
-            type: LOAD_SORT_DATA,
-            payload: { results, totalResults, sortValue: state.sort },
-          });
+          dispatch({ type: LOAD_SEARCH_DATA, payload: { results, totalResults } });
         })
         .catch(() => {
           dispatch({ type: ERROR });
@@ -45,23 +43,27 @@ export function Movies() {
           dispatch({ type: LOADED });
         });
     }
-    if (!state.isLoaded) {
-      getPopular({ page: 1 }).then(({ results }) => {
-        dispatch({ type: LOAD_DATA, payload: { results } });
-      });
+    if (inputRef.current) {
+      inputRef.current.focus();
     }
-  }, [state.sort]);
+  }, [searchQuery]);
 
   return (
     <>
       {state.isLoading && <Loader />}
       <div className="controls">
-        <Sort
-          sortValue={state.sort}
-          onChange={(value: string) => {
-            dispatch({ type: SORT, payload: { sortValue: value } });
-          }}
-        />
+        {state.isError && (
+          <div className="search-results">Something went wrong, please try again!</div>
+        )}
+        {!state.movies.length && !state.isError && (
+          <div className="search-results">No movies found, please try again!</div>
+        )}
+        {!state.isError && !!state.movies.length && (
+          <div className="search-results">
+            <span>{`Over ${state.totalResults} results for `}</span>
+            <span className="search-results__query">{`"${state.search || searchQuery}"`}</span>
+          </div>
+        )}
         <Search
           searchText={state.search}
           onChange={(text: string) => {

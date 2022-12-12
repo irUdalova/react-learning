@@ -7,6 +7,7 @@ import { Member } from 'pages/member/Member';
 import React, { useReducer } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import appReducer from './reducers/appReducer';
+import { SearchPage } from 'pages/searchPage/SearchPage';
 
 const initialState = {
   mainPage: {
@@ -18,6 +19,8 @@ const initialState = {
     totalResults: 0,
     isError: false,
     isLoading: false,
+    isLoaded: false,
+    sort: 'PopularityDesc',
   },
   formPage: {
     cards: [],
@@ -47,6 +50,7 @@ export default function App() {
             <Route index element={<Movies />} />
             <Route path="/about" element={<About />} />
             <Route path="/member" element={<Member />} />
+            <Route path="/search" element={<SearchPage />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

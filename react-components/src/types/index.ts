@@ -49,6 +49,8 @@ export interface IMovie {
   totalResults: number;
   isError: boolean;
   isLoading: boolean;
+  isLoaded: boolean;
+  sort: string;
 }
 
 export interface ICardType {
@@ -92,6 +94,7 @@ export type TPayload = {
   country: string;
   isAgreeTerms: boolean;
   isAgreePromo: boolean;
+  sortValue: string;
 };
 
 export type TActionMainReducer = {

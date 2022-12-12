@@ -4,6 +4,7 @@ export const LOAD_DATA = 'loadData';
 export const ERROR = 'error';
 export const LOAD_SEARCH_DATA = 'loadSearchData';
 export const SEARCH = 'search';
+export const SORT = 'sort';
 export const POPUP_OPEN = 'popupOpen';
 export const POPUP_CLOSE = 'popupClose';
 
@@ -17,3 +18,4 @@ export const CHANGE_DATE = 'changeDate';
 export const CHANGE_COUNTRY = 'changeCountry';
 export const AGREE_TERMS = 'agreeTerms';
 export const AGREE_PROMO = 'agreePromo';
+export const LOAD_SORT_DATA = 'loadSortData';

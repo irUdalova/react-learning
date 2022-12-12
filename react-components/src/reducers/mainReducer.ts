@@ -4,9 +4,11 @@ import {
   LOADING,
   LOAD_DATA,
   LOAD_SEARCH_DATA,
+  LOAD_SORT_DATA,
   POPUP_CLOSE,
   POPUP_OPEN,
   SEARCH,
+  SORT,
 } from 'constants/actions';
 import { IMovie, TActionMainReducer } from 'types';
 
@@ -23,7 +25,8 @@ export function mainReducer(state: IMovie, { type, payload }: TActionMainReducer
       return {
         ...state,
         isError: false,
-        isLoading: true,
+        isLoading: false,
+        isLoaded: true,
       };
     }
     case LOAD_DATA: {
@@ -48,10 +51,26 @@ export function mainReducer(state: IMovie, { type, payload }: TActionMainReducer
         isLoading: false,
       };
     }
+    case LOAD_SORT_DATA: {
+      return {
+        ...state,
+        movies: payload.results,
+        totalResults: payload.totalResults,
+        sort: payload.sortValue,
+        isLoading: false,
+        search: '',
+      };
+    }
     case SEARCH: {
       return {
         ...state,
         search: payload.search,
+      };
+    }
+    case SORT: {
+      return {
+        ...state,
+        sort: payload.sortValue,
       };
     }
     case POPUP_OPEN: {

@@ -5,13 +5,22 @@
 .movies-wrap {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: space-between;
   gap: 10px;
 }
 
-.search-results {
+.controls {
+  display: flex;
+  align-items: center;
   margin-top: 30px;
+}
+
+.search-results {
   text-align: center;
   color: white;
   font-weight: 200;
+}
+
+.search-results__query{
+  color: #61dafb;
 }

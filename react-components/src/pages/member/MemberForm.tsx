@@ -22,19 +22,6 @@ type FormDataType = {
   userPromo: boolean;
 };
 
-// formPage: {
-//   cards: [],
-//   cardForm: {
-//     url: '',
-//     name: '',
-//     date: '',
-//     country: '',
-//     isAgreeTerms: false,
-//     isAgreePromo: false,
-//   },
-//   submitSuccess: false,
-// },
-
 export function MemberForm() {
   const { formPage: state } = useContext(AppStateContext);
   const dispatch = useContext(AppDispatchContext);
@@ -52,7 +39,7 @@ export function MemberForm() {
     reader.readAsDataURL(file);
     reader.onload = () => {
       dispatch({ type: SET_URL_IMG, payload: { url: reader.result } });
-      console.log('state.cardForm.urlImg', state.cardForm.url);
+      // console.log('state.cardForm.urlImg', state.cardForm.url);
     };
   };
 
@@ -82,7 +69,6 @@ export function MemberForm() {
 
   return (
     <>
-      {console.log('state', state)}
       {state.submitSuccess && (
         <div className="submit-success">Your data has been successfully saved!</div>
       )}
