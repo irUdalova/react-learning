@@ -19,3 +19,8 @@ export const CHANGE_COUNTRY = 'changeCountry';
 export const AGREE_TERMS = 'agreeTerms';
 export const AGREE_PROMO = 'agreePromo';
 export const LOAD_SORT_DATA = 'loadSortData';
+
+export const SET_CURRENT_PAGE = 'setCurrentPage';
+export const SET_SEARCH_PARAMS = 'setSearchParams';
+
+export const QUERY_PARAM_CHANGE = 'queryParamChange';

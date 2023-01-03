@@ -3,8 +3,8 @@ import React, { useContext, useEffect, useRef } from 'react';
 import { Search } from 'components/search/Search';
 import { Sort } from 'components/sort/Sort';
 import { Movie } from 'components/movie/Movie';
+import { Pagination } from 'components/pagination/Pagination';
 import { Popup } from 'components/popup/Popup';
-import { getPopular } from 'api/popular';
 import './Movies.css';
 import { Loader } from 'components/loader/Loader';
 import { AppDispatchContext, AppStateContext } from 'App';
@@ -13,29 +13,34 @@ import {
   ERROR,
   LOADED,
   LOADING,
-  LOAD_DATA,
   LOAD_SORT_DATA,
   POPUP_CLOSE,
   POPUP_OPEN,
-  SEARCH,
-  SORT,
+  QUERY_PARAM_CHANGE,
 } from 'constants/actions';
 import { sortMovies } from 'api/sort';
+import { useSearchParams } from 'react-router-dom';
 
 export function Movies() {
   const { mainPage: state } = useContext(AppStateContext);
   const dispatch = useContext(AppDispatchContext);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const [queryParams, setQueryParams] = useSearchParams();
+  console.log('queryParam', queryParams);
+
+  const sortQuery = queryParams.get('sort');
+  const pageQuery = Number(queryParams.get('page'));
+
   useEffect(() => {
     if (state.sort) {
       dispatch({ type: LOADING });
 
-      sortMovies({ page: 1, sortParam: state.sort })
+      sortMovies({ sortParam: state.sort, page: state.pagination.currentPage })
         .then(({ results, totalResults }) => {
           dispatch({
             type: LOAD_SORT_DATA,
-            payload: { results, totalResults, sortValue: state.sort },
+            payload: { results, totalResults },
           });
         })
         .catch(() => {
@@ -45,30 +50,29 @@ export function Movies() {
           dispatch({ type: LOADED });
         });
     }
-    if (!state.isLoaded) {
-      getPopular({ page: 1 }).then(({ results }) => {
-        dispatch({ type: LOAD_DATA, payload: { results } });
-      });
-    }
-  }, [state.sort]);
+  }, [state.sort, state.pagination.currentPage]);
+
+  useEffect(() => {
+    dispatch({
+      type: QUERY_PARAM_CHANGE,
+      payload: { sortValue: sortQuery, currentPage: pageQuery },
+    });
+  }, [sortQuery, pageQuery]);
 
   return (
     <>
       {state.isLoading && <Loader />}
+      {state.isError && (
+        <div className="search-results">Something went wrong, please try again!</div>
+      )}
       <div className="controls">
         <Sort
           sortValue={state.sort}
           onChange={(value: string) => {
-            dispatch({ type: SORT, payload: { sortValue: value } });
+            setQueryParams({ sort: value });
           }}
         />
-        <Search
-          searchText={state.search}
-          onChange={(text: string) => {
-            dispatch({ type: SEARCH, payload: { search: text } });
-          }}
-          inputRef={inputRef}
-        />
+        <Search inputRef={inputRef} />
       </div>
 
       <div className="movies">
@@ -84,6 +88,16 @@ export function Movies() {
           ))}
         </div>
       </div>
+      {!!state.totalResults && (
+        <Pagination
+          itemsPerPage={state.pagination.itemsPerPage}
+          totalResults={state.totalResults}
+          currentPage={state.pagination.currentPage}
+          onPageClick={(num: number) => {
+            setQueryParams({ ...Object.fromEntries(queryParams.entries()), page: num.toString() });
+          }}
+        />
+      )}
       {state.isPopupOpen && (
         <Popup
           movie={

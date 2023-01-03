@@ -10,7 +10,7 @@ type MovieParam = {
 
 export function Movie({ movie, onMovieClick }: MovieParam) {
   const { title, posterPath, releaseDate } = movie;
-  console.log('movie', movie);
+  // console.log('movie', movie);
 
   return (
     <>

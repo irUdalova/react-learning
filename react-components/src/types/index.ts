@@ -42,7 +42,7 @@ export interface CardType {
 
 export interface IMovie {
   search: string;
-  isSearching: boolean;
+  // isSearching: boolean;
   movies: MovieType[];
   isPopupOpen: boolean;
   popupMovieID: number;
@@ -51,6 +51,25 @@ export interface IMovie {
   isLoading: boolean;
   isLoaded: boolean;
   sort: string;
+  pagination: IPagination;
+}
+
+export interface ISearch {
+  search: string;
+  // isSearching: boolean;
+  movies: MovieType[];
+  isPopupOpen: boolean;
+  popupMovieID: number;
+  totalResults: number;
+  isError: boolean;
+  isLoading: boolean;
+  isLoaded: boolean;
+  pagination: IPagination;
+}
+
+export interface IPagination {
+  currentPage: number;
+  itemsPerPage: number;
 }
 
 export interface ICardType {
@@ -71,6 +90,7 @@ export interface IForm {
 
 export interface IState {
   mainPage: IMovie;
+  searchPage: ISearch;
   formPage: IForm;
 }
 
@@ -85,7 +105,8 @@ export interface IAppDispatchContextParam {
 export type TPayload = {
   results: IMovie[];
   totalResults: number;
-  search: string;
+  // search: string;
+  searchParams: string;
   popupMovieID: number;
   formData: ICardType;
   url: string;
@@ -95,6 +116,7 @@ export type TPayload = {
   isAgreeTerms: boolean;
   isAgreePromo: boolean;
   sortValue: string;
+  currentPage: number;
 };
 
 export type TActionMainReducer = {

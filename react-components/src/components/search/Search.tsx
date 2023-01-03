@@ -1,16 +1,21 @@
-import React, { LegacyRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { LegacyRef, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import './Search.css';
 
 type TSearchParams = {
-  searchText: string;
-  onChange: (text: string) => void;
+  // searchText: string;
+  // onChange: (text: string) => void;
   inputRef: LegacyRef<HTMLInputElement>;
 };
 
-export function Search({ searchText, onChange, inputRef = null }: TSearchParams) {
-  const isSearching = !!searchText;
+// export function Search({ searchText, onChange, inputRef = null }: TSearchParams) {
+export function Search({ inputRef = null }: TSearchParams) {
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('search');
+  // const initialSearchText = '';
+  const [searchText, setSearchText] = useState(searchQuery);
   const navigate = useNavigate();
+  const isSearching = !!searchText;
 
   return (
     <>
@@ -19,21 +24,21 @@ export function Search({ searchText, onChange, inputRef = null }: TSearchParams)
           htmlFor="searchInput"
           className="search-wrap__clear-btn"
           onClick={() => {
-            onChange('');
+            setSearchText('');
           }}
         ></label>
         <input
           id="searchInput"
           placeholder="Find your movie"
           type="text"
-          value={searchText}
+          value={searchText || ''}
           onChange={(e) => {
-            onChange(e.target.value);
+            setSearchText(e.target.value);
           }}
           ref={inputRef}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
-              navigate(`/search?search=${searchText}`);
+              navigate(`/search?search=${searchText}&page=1`);
             }
           }}
           className="search-wrap__search-inp"

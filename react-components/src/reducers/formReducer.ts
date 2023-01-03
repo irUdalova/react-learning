@@ -98,18 +98,3 @@ export function formReducer(state: IForm, { type, payload }: TActionMainReducer)
       return state;
   }
 }
-
-// export const CHANGE_NAME = 'changeName';
-// export const CHANGE_DATE = 'changeDate';
-// export const CHANGE_COUNTRY = 'changeCountry';
-// export const AGREE_TERMS = 'agreeTerms';
-// export const AGREE_PROMO = 'agreePromo';
-
-// cardForm: {
-//   url: '',
-//   name: '',
-//   date: '',
-//   country: '',
-//   isAgreeTerms: false,
-//   isAgreePromo: false,
-// },

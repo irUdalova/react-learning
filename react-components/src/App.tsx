@@ -9,10 +9,8 @@ import { Routes, Route } from 'react-router-dom';
 import appReducer from './reducers/appReducer';
 import { SearchPage } from 'pages/searchPage/SearchPage';
 
-const initialState = {
+export const initialState = {
   mainPage: {
-    search: '',
-    isSearching: false,
     movies: [],
     isPopupOpen: false,
     popupMovieID: 0,
@@ -21,6 +19,24 @@ const initialState = {
     isLoading: false,
     isLoaded: false,
     sort: 'PopularityDesc',
+    pagination: {
+      currentPage: 1,
+      itemsPerPage: 20,
+    },
+  },
+  searchPage: {
+    search: '',
+    movies: [],
+    isPopupOpen: false,
+    popupMovieID: 0,
+    totalResults: 0,
+    isError: false,
+    isLoading: false,
+    isLoaded: false,
+    pagination: {
+      currentPage: 1,
+      itemsPerPage: 20,
+    },
   },
   formPage: {
     cards: [],

@@ -3,25 +3,22 @@ import {
   LOADED,
   LOADING,
   LOAD_SEARCH_DATA,
-  LOAD_SORT_DATA,
   POPUP_CLOSE,
   POPUP_OPEN,
   QUERY_PARAM_CHANGE,
-  SET_CURRENT_PAGE,
 } from 'constants/actions';
-import { IMovie, TActionMainReducer } from 'types';
+import { IMovie, ISearch, TActionMainReducer } from 'types';
 
-export function mainReducer(
+export function searchReducer(
   state: IMovie,
   { type, payload }: TActionMainReducer,
-  initialState: IMovie
+  initialState: ISearch
 ) {
-  // console.log('mainReducer, initial', initialState);
   switch (type) {
     case QUERY_PARAM_CHANGE: {
       return {
         ...state,
-        sort: payload.sortValue || initialState.sort,
+        search: payload.searchParams || initialState.search,
         pagination: {
           ...state.pagination,
           currentPage: payload.currentPage || initialState.pagination.currentPage,
@@ -56,24 +53,6 @@ export function mainReducer(
         totalResults: payload.totalResults,
         isSearching: true,
         isLoading: false,
-      };
-    }
-    case LOAD_SORT_DATA: {
-      return {
-        ...state,
-        movies: payload.results,
-        totalResults: payload.totalResults,
-        isLoading: false,
-        search: '',
-      };
-    }
-    case SET_CURRENT_PAGE: {
-      return {
-        ...state,
-        pagination: {
-          ...state.pagination,
-          currentPage: payload.currentPage,
-        },
       };
     }
     case POPUP_OPEN: {

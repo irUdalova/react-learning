@@ -16,25 +16,33 @@ import {
   LOAD_SEARCH_DATA,
   POPUP_CLOSE,
   POPUP_OPEN,
-  SEARCH,
+  QUERY_PARAM_CHANGE,
 } from 'constants/actions';
 import { useSearchParams } from 'react-router-dom';
+import { Pagination } from 'components/pagination/Pagination';
 
 export function SearchPage() {
-  const { mainPage: state } = useContext(AppStateContext);
+  const { searchPage: state } = useContext(AppStateContext);
+  // console.log('searchPage: state ', state);
+
   const dispatch = useContext(AppDispatchContext);
 
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const searchQuery = searchParams.get('search');
+  const pageQuery = Number(searchParams.get('page'));
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (searchQuery) {
       dispatch({ type: LOADING });
 
-      searchMovies({ page: 1, searchParam: searchQuery })
+      searchMovies({ searchParam: state.search, page: state.pagination.currentPage })
         .then(({ results, totalResults }) => {
-          dispatch({ type: LOAD_SEARCH_DATA, payload: { results, totalResults } });
+          dispatch({
+            type: LOAD_SEARCH_DATA,
+            payload: { results, totalResults },
+          });
         })
         .catch(() => {
           dispatch({ type: ERROR });
@@ -46,7 +54,14 @@ export function SearchPage() {
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  }, [searchQuery]);
+  }, [state.search, state.pagination.currentPage]);
+
+  useEffect(() => {
+    dispatch({
+      type: QUERY_PARAM_CHANGE,
+      payload: { searchParams: searchQuery, currentPage: pageQuery },
+    });
+  }, [searchQuery, pageQuery]);
 
   return (
     <>
@@ -64,13 +79,7 @@ export function SearchPage() {
             <span className="search-results__query">{`"${state.search || searchQuery}"`}</span>
           </div>
         )}
-        <Search
-          searchText={state.search}
-          onChange={(text: string) => {
-            dispatch({ type: SEARCH, payload: { search: text } });
-          }}
-          inputRef={inputRef}
-        />
+        <Search inputRef={inputRef} />
       </div>
 
       <div className="movies">
@@ -86,6 +95,19 @@ export function SearchPage() {
           ))}
         </div>
       </div>
+      {!!state.totalResults && (
+        <Pagination
+          itemsPerPage={state.pagination.itemsPerPage}
+          totalResults={state.totalResults}
+          currentPage={state.pagination.currentPage}
+          onPageClick={(num: number) => {
+            setSearchParams({
+              ...Object.fromEntries(searchParams.entries()),
+              page: num.toString(),
+            });
+          }}
+        />
+      )}
       {state.isPopupOpen && (
         <Popup
           movie={
