@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useRef } from 'react';
 import { Search } from 'components/search/Search';
 import { Movie } from 'components/movie/Movie';
 import { Popup } from 'components/popup/Popup';
-import { searchMovies } from 'api/search';
 import '../movies/Movies';
 import '../movies/Movies.css';
 import { Loader } from 'components/loader/Loader';
@@ -16,14 +15,22 @@ import {
   LOAD_SEARCH_DATA,
   POPUP_CLOSE,
   POPUP_OPEN,
-  QUERY_PARAM_CHANGE,
+  SEARCH_PARAM_CHANGE,
 } from 'constants/actions';
 import { useSearchParams } from 'react-router-dom';
 import { Pagination } from 'components/pagination/Pagination';
+import { getItemsAmountSearch } from 'api/helpers';
 
 export function SearchPage() {
-  const { searchPage: state } = useContext(AppStateContext);
-  // console.log('searchPage: state ', state);
+  // const { searchPage: state } = useContext(AppStateContext);
+  const globalState = useContext(AppStateContext);
+  const { searchPage: state } = globalState;
+
+  // console.log(
+  //   'paginations SearchPage',
+  //   globalState.searchPage.pagination,
+  //   globalState.mainPage.pagination
+  // );
 
   const dispatch = useContext(AppDispatchContext);
 
@@ -31,17 +38,22 @@ export function SearchPage() {
 
   const searchQuery = searchParams.get('search');
   const pageQuery = Number(searchParams.get('page'));
+  const itemsQuery = searchParams.get('items');
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (searchQuery) {
+    if (state.search) {
       dispatch({ type: LOADING });
 
-      searchMovies({ searchParam: state.search, page: state.pagination.currentPage })
-        .then(({ results, totalResults }) => {
+      getItemsAmountSearch({
+        itemsPerPage: state.pagination.itemsPerPage,
+        searchParam: state.search,
+        page: state.pagination.currentPage,
+      })
+        .then(({ results, totalResults, totalPages }) => {
           dispatch({
             type: LOAD_SEARCH_DATA,
-            payload: { results, totalResults },
+            payload: { results, totalResults, totalPages },
           });
         })
         .catch(() => {
@@ -51,17 +63,18 @@ export function SearchPage() {
           dispatch({ type: LOADED });
         });
     }
+
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  }, [state.search, state.pagination.currentPage]);
+  }, [state.search, state.pagination.currentPage, state.pagination.itemsPerPage]);
 
   useEffect(() => {
     dispatch({
-      type: QUERY_PARAM_CHANGE,
-      payload: { searchParams: searchQuery, currentPage: pageQuery },
+      type: SEARCH_PARAM_CHANGE,
+      payload: { searchParams: searchQuery, currentPage: pageQuery, itemsPerPage: itemsQuery },
     });
-  }, [searchQuery, pageQuery]);
+  }, [searchQuery, pageQuery, itemsQuery]);
 
   return (
     <>
@@ -98,12 +111,19 @@ export function SearchPage() {
       {!!state.totalResults && (
         <Pagination
           itemsPerPage={state.pagination.itemsPerPage}
-          totalResults={state.totalResults}
+          totalPages={state.totalPages}
           currentPage={state.pagination.currentPage}
           onPageClick={(num: number) => {
             setSearchParams({
               ...Object.fromEntries(searchParams.entries()),
               page: num.toString(),
+            });
+          }}
+          onChangeItemsPerPage={(amount: number) => {
+            setSearchParams({
+              ...Object.fromEntries(searchParams.entries()),
+              items: amount.toString(),
+              page: '1',
             });
           }}
         />

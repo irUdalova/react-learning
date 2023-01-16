@@ -2,7 +2,6 @@ import {
   ERROR,
   LOADED,
   LOADING,
-  LOAD_SEARCH_DATA,
   LOAD_SORT_DATA,
   POPUP_CLOSE,
   POPUP_OPEN,
@@ -16,7 +15,6 @@ export function mainReducer(
   { type, payload }: TActionMainReducer,
   initialState: IMovie
 ) {
-  // console.log('mainReducer, initial', initialState);
   switch (type) {
     case QUERY_PARAM_CHANGE: {
       return {
@@ -25,6 +23,7 @@ export function mainReducer(
         pagination: {
           ...state.pagination,
           currentPage: payload.currentPage || initialState.pagination.currentPage,
+          itemsPerPage: payload.itemsPerPage || initialState.pagination.itemsPerPage,
         },
       };
     }
@@ -49,22 +48,13 @@ export function mainReducer(
         isError: true,
       };
     }
-    case LOAD_SEARCH_DATA: {
-      return {
-        ...state,
-        movies: payload.results,
-        totalResults: payload.totalResults,
-        isSearching: true,
-        isLoading: false,
-      };
-    }
     case LOAD_SORT_DATA: {
       return {
         ...state,
         movies: payload.results,
         totalResults: payload.totalResults,
+        totalPages: payload.totalPages,
         isLoading: false,
-        search: '',
       };
     }
     case SET_CURRENT_PAGE: {

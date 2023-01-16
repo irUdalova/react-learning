@@ -39,14 +39,12 @@ export function MemberForm() {
     reader.readAsDataURL(file);
     reader.onload = () => {
       dispatch({ type: SET_URL_IMG, payload: { url: reader.result } });
-      // console.log('state.cardForm.urlImg', state.cardForm.url);
     };
   };
 
   const resetForm = () => {
     dispatch({ type: FORM_RESET });
     reset();
-    // console.log('stateafterreset', state);
   };
 
   const onSubmit = (data: FormDataType) => {

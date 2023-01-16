@@ -1,6 +1,27 @@
+.nav-pagination {
+ display: flex;
+ align-items: center;
+ margin-top: 60px;
+ position: relative;
+}
+
+.pagination__per-page {
+  display: flex;
+  align-items: center;
+  color: #a5a5a5;
+  gap: 20px;
+  position: absolute;
+  right: 0;
+}
+
+.items-label {
+  margin: 0;
+}
+
 .pagination {
   max-width: 400px;
-  margin: 60px auto 0;
+  /* margin: 60px auto 0; */
+  margin: 0 auto;
   background-color: #282c34;
   display: flex;
   justify-content: center;

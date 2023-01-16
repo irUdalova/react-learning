@@ -20,10 +20,10 @@ const sortMap = {
 
 const URL = 'https://api.themoviedb.org/3/discover/movie';
 
-export async function sortMovies({
+export const sortMovies = async ({
   page = 1,
   sortParam = 'PopularityDesc',
-}: SortType): Promise<MoviesData> {
+}: SortType): Promise<MoviesData> => {
   const res = await fetch(
     `${URL}?api_key=${API_KEY}&language=en-US&sort_by=${
       sortMap[sortParam as keyof typeof sortMap]
@@ -31,4 +31,4 @@ export async function sortMovies({
   );
 
   return renameValues(await res.json());
-}
+};

@@ -3,16 +3,12 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import './Search.css';
 
 type TSearchParams = {
-  // searchText: string;
-  // onChange: (text: string) => void;
   inputRef: LegacyRef<HTMLInputElement>;
 };
 
-// export function Search({ searchText, onChange, inputRef = null }: TSearchParams) {
 export function Search({ inputRef = null }: TSearchParams) {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('search');
-  // const initialSearchText = '';
   const [searchText, setSearchText] = useState(searchQuery);
   const navigate = useNavigate();
   const isSearching = !!searchText;

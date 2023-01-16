@@ -5,23 +5,24 @@ import {
   LOAD_SEARCH_DATA,
   POPUP_CLOSE,
   POPUP_OPEN,
-  QUERY_PARAM_CHANGE,
+  SEARCH_PARAM_CHANGE,
 } from 'constants/actions';
-import { IMovie, ISearch, TActionMainReducer } from 'types';
+import { ISearch, TActionMainReducer } from 'types';
 
 export function searchReducer(
-  state: IMovie,
+  state: ISearch,
   { type, payload }: TActionMainReducer,
   initialState: ISearch
 ) {
   switch (type) {
-    case QUERY_PARAM_CHANGE: {
+    case SEARCH_PARAM_CHANGE: {
       return {
         ...state,
         search: payload.searchParams || initialState.search,
         pagination: {
           ...state.pagination,
           currentPage: payload.currentPage || initialState.pagination.currentPage,
+          itemsPerPage: payload.itemsPerPage || initialState.pagination.itemsPerPage,
         },
       };
     }
@@ -51,8 +52,8 @@ export function searchReducer(
         ...state,
         movies: payload.results,
         totalResults: payload.totalResults,
-        isSearching: true,
         isLoading: false,
+        totalPages: payload.totalPages,
       };
     }
     case POPUP_OPEN: {

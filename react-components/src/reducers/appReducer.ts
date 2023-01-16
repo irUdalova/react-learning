@@ -16,7 +16,6 @@ const appReducers = (reducersMap: any) => (state: any, action: any) =>
     const reducer = reducersMap[reducerName];
     const partialState = newState[reducerName];
     const initial = initialState[reducerName as keyof TReducerMap];
-    console.log('appReducers, initial', initial);
 
     return {
       ...newState,

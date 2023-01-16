@@ -4,18 +4,23 @@ import './Pagination.css';
 type TPageParams = {
   itemsPerPage: number;
   currentPage: number;
-  totalResults: number;
+  totalPages: number;
   onPageClick: (num: number) => void;
+  onChangeItemsPerPage: (amount: number) => void;
 };
 
 export function Pagination({
   itemsPerPage = 20,
-  totalResults = 1000,
+  totalPages,
   onPageClick,
   currentPage,
+  onChangeItemsPerPage,
 }: TPageParams) {
-  const totalPages =
-    Math.ceil(totalResults / itemsPerPage) >= 500 ? 500 : Math.ceil(totalResults / itemsPerPage);
+  //API can't return more than 500 page
+  // const totalPages = Math.floor((500 - 1) / (itemsPerPage / 20));
+  // const totalPages = Math.floor((500 - 1) / (itemsPerPage / 20)) + 1;
+  // const totalPages =
+  //   Math.ceil(totalResults / itemsPerPage) >= 500 ? 500 : Math.ceil(totalResults / itemsPerPage);
 
   const pageNumbers = [];
 
@@ -33,15 +38,14 @@ export function Pagination({
     ]),
   ].sort((a, b) => a - b);
 
-  console.log('currentPage', currentPage);
-  console.log('totalPages', totalPages);
-
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
   }
 
+  const paginationPages = totalPages > 3 ? pages : pageNumbers;
+
   return (
-    <nav>
+    <nav className="nav-pagination">
       <div className="pagination">
         {/*  =========== back =========== */}
         <button
@@ -55,11 +59,10 @@ export function Pagination({
         </button>
 
         {/*  =========== pages =========== */}
-        {pages.map((num: number, i) => (
-          <>
-            {num - pages[i - 1] > 1 && <span className="pages-separator">...</span>}
+        {paginationPages.map((num: number, i) => (
+          <React.Fragment key={num}>
+            {num - paginationPages[i - 1] > 1 && <span className="pages-separator">...</span>}
             <button
-              key={num}
               className={`${num === currentPage ? 'page-item_current' : 'page-item'}`}
               onClick={() => {
                 onPageClick(num);
@@ -67,7 +70,7 @@ export function Pagination({
             >
               {num}
             </button>
-          </>
+          </React.Fragment>
         ))}
         {/*  =========== forward =========== */}
         <button
@@ -79,6 +82,23 @@ export function Pagination({
         >
           {`❯`}{' '}
         </button>
+      </div>
+      {/*  =========== numPerPage =========== */}
+      <div className="pagination__per-page">
+        <select
+          className="items-select"
+          onChange={(e) => {
+            onChangeItemsPerPage(Number(e.target.value));
+          }}
+          value={itemsPerPage}
+        >
+          <option value="20">20</option>
+          <option value="40">40</option>
+          <option value="60">60</option>
+          <option value="80">80</option>
+          <option value="100">100</option>
+        </select>
+        <p className="items-label">Show per page</p>
       </div>
     </nav>
   );

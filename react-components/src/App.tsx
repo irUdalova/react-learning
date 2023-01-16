@@ -22,6 +22,7 @@ export const initialState = {
     pagination: {
       currentPage: 1,
       itemsPerPage: 20,
+      totalPages: 500,
     },
   },
   searchPage: {
@@ -36,6 +37,7 @@ export const initialState = {
     pagination: {
       currentPage: 1,
       itemsPerPage: 20,
+      totalPages: 500,
     },
   },
   formPage: {
