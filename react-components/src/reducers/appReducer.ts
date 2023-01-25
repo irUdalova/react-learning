@@ -4,11 +4,13 @@ import { formReducer } from './formReducer';
 import { mainReducer } from './mainReducer';
 import { searchReducer } from './searchReducer';
 import { initialState } from 'App';
+import { movieReducer } from './movieReducer';
 
 export type TReducerMap = {
   mainPage: 'mainReducer';
   formPage: 'formReducer';
   searchPage: 'searchReducer';
+  moviePage: 'movieReducer';
 };
 
 const appReducers = (reducersMap: any) => (state: any, action: any) =>
@@ -27,4 +29,5 @@ export default appReducers({
   mainPage: mainReducer,
   formPage: formReducer,
   searchPage: searchReducer,
+  moviePage: movieReducer,
 });

@@ -8,6 +8,7 @@ import React, { useReducer } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import appReducer from './reducers/appReducer';
 import { SearchPage } from 'pages/searchPage/SearchPage';
+import { MoviePage } from 'pages/moviePage/MoviePage';
 
 export const initialState = {
   mainPage: {
@@ -40,6 +41,12 @@ export const initialState = {
       totalPages: 500,
     },
   },
+  moviePage: {
+    movieData: {},
+    isError: false,
+    isLoading: false,
+    isLoaded: false,
+  },
   formPage: {
     cards: [],
     cardForm: {
@@ -66,6 +73,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Movies />} />
+            <Route path="/:id" element={<MoviePage />} />
             <Route path="/about" element={<About />} />
             <Route path="/member" element={<Member />} />
             <Route path="/search" element={<SearchPage />} />

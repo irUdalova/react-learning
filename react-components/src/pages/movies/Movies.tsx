@@ -15,27 +15,20 @@ import {
   LOADING,
   LOAD_SORT_DATA,
   POPUP_CLOSE,
-  POPUP_OPEN,
   QUERY_PARAM_CHANGE,
 } from 'constants/actions';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getItemsAmountSort } from 'api/helpers';
 
 export function Movies() {
-  // const { mainPage: state } = useContext(AppStateContext);
   const globalState = useContext(AppStateContext);
   const { mainPage: state } = globalState;
-
-  // console.log(
-  //   'paginations Movies',
-  //   globalState.searchPage.pagination,
-  //   globalState.mainPage.pagination
-  // );
 
   const dispatch = useContext(AppDispatchContext);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [queryParams, setQueryParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const sortQuery = queryParams.get('sort');
   const pageQuery = Number(queryParams.get('page'));
@@ -98,7 +91,7 @@ export function Movies() {
               key={`${mov.id.toString()}${i}`}
               movie={mov}
               onMovieClick={() => {
-                dispatch({ type: POPUP_OPEN, payload: { popupMovieID: mov.id } });
+                navigate(`/${mov.id}`);
               }}
             />
           ))}

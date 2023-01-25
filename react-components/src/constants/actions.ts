@@ -25,3 +25,5 @@ export const SET_SEARCH_PARAMS = 'setSearchParams';
 
 export const QUERY_PARAM_CHANGE = 'queryParamChange';
 export const SEARCH_PARAM_CHANGE = 'searchParamChange';
+
+export const LOAD_MOVIE_DATA = 'loadMovieData';

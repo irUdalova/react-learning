@@ -1,4 +1,4 @@
-import { GetMovieResp, MovieType, MovieTypeResp } from 'types';
+import { GetFullMovieResp, GetMovieResp, MovieType, MovieTypeResp } from 'types';
 import { searchMovies } from './search';
 import { sortMovies } from './sort';
 
@@ -30,6 +30,20 @@ export function renameValues(response: GetMovieResp) {
     results,
     totalResults: response.total_results,
     totalPages: response.total_pages,
+  };
+}
+
+export function renameMovieValues(response: GetFullMovieResp) {
+  return {
+    id: response.id,
+    title: response.title,
+    genres: response.genres,
+    posterPath: response.poster_path,
+    releaseDate: response.release_date,
+    tagline: response.tagline,
+    runtime: response.runtime,
+    overview: response.overview,
+    vote: response.vote_average,
   };
 }
 

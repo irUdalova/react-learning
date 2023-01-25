@@ -13,6 +13,18 @@ export interface GetMovieResp {
   total_pages: number;
 }
 
+export interface GetFullMovieResp {
+  id: number;
+  title: string;
+  genres: IGenres[];
+  poster_path: string;
+  release_date: string;
+  tagline: string;
+  runtime: string;
+  overview?: string;
+  vote_average: number;
+}
+
 export interface MovieType {
   id: number;
   title: string;
@@ -20,12 +32,28 @@ export interface MovieType {
   releaseDate: string;
   overview?: string;
 }
-
 export interface MoviesData {
   page: number;
   results: MovieType[];
   totalResults: number;
   totalPages: number;
+}
+
+export interface IGenres {
+  id: number;
+  name: string;
+}
+
+export interface MovieTypeFull {
+  id: number;
+  title: string;
+  genres: IGenres[];
+  posterPath: string;
+  releaseDate: string;
+  tagline: string;
+  runtime: string;
+  overview?: string;
+  vote: number;
 }
 
 export interface CardType {
@@ -68,6 +96,13 @@ export interface ISearch {
 export interface IPagination {
   currentPage: number;
   itemsPerPage: number;
+}
+
+export interface IMoviePage {
+  movieData: MovieTypeFull;
+  isError: boolean;
+  isLoading: boolean;
+  isLoaded: boolean;
 }
 
 export interface ICardType {
@@ -116,6 +151,7 @@ export type TPayload = {
   sortValue: string;
   currentPage: number;
   itemsPerPage: number;
+  movie: MovieTypeFull;
 };
 
 export type TActionMainReducer = {

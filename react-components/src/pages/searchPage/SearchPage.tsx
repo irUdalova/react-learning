@@ -14,27 +14,20 @@ import {
   LOADING,
   LOAD_SEARCH_DATA,
   POPUP_CLOSE,
-  POPUP_OPEN,
   SEARCH_PARAM_CHANGE,
 } from 'constants/actions';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Pagination } from 'components/pagination/Pagination';
 import { getItemsAmountSearch } from 'api/helpers';
 
 export function SearchPage() {
-  // const { searchPage: state } = useContext(AppStateContext);
   const globalState = useContext(AppStateContext);
   const { searchPage: state } = globalState;
-
-  // console.log(
-  //   'paginations SearchPage',
-  //   globalState.searchPage.pagination,
-  //   globalState.mainPage.pagination
-  // );
 
   const dispatch = useContext(AppDispatchContext);
 
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const searchQuery = searchParams.get('search');
   const pageQuery = Number(searchParams.get('page'));
@@ -102,7 +95,7 @@ export function SearchPage() {
               key={mov.id.toString()}
               movie={mov}
               onMovieClick={() => {
-                dispatch({ type: POPUP_OPEN, payload: { popupMovieID: mov.id } });
+                navigate(`/${mov.id}`);
               }}
             />
           ))}
