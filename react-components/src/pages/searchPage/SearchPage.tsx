@@ -1,11 +1,10 @@
 // /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useContext, useEffect, useRef } from 'react';
 import { Search } from 'components/search/Search';
-import { Sort } from 'components/sort/Sort';
 import { Movie } from 'components/movie/Movie';
-import { Pagination } from 'components/pagination/Pagination';
 import { Popup } from 'components/popup/Popup';
-import './Movies.css';
+import '../movies/Movies';
+import '../movies/Movies.css';
 import { Loader } from 'components/loader/Loader';
 import { AppDispatchContext, AppStateContext } from 'App';
 import { MovieType } from 'types';
@@ -13,39 +12,40 @@ import {
   ERROR,
   LOADED,
   LOADING,
-  LOAD_SORT_DATA,
+  LOAD_SEARCH_DATA,
   POPUP_CLOSE,
-  QUERY_PARAM_CHANGE,
+  SEARCH_PARAM_CHANGE,
 } from 'constants/actions';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { getItemsAmountSort } from 'api/helpers';
+import { Pagination } from 'components/pagination/Pagination';
+import { getItemsAmountSearch } from 'api/helpers';
 
-export function Movies() {
+export function SearchPage() {
   const globalState = useContext(AppStateContext);
-  const { mainPage: state } = globalState;
+  const { searchPage: state } = globalState;
 
   const dispatch = useContext(AppDispatchContext);
-  const inputRef = useRef<HTMLInputElement>(null);
 
-  const [queryParams, setQueryParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const sortQuery = queryParams.get('sort');
-  const pageQuery = Number(queryParams.get('page'));
-  const itemsQuery = queryParams.get('items');
+  const searchQuery = searchParams.get('search');
+  const pageQuery = Number(searchParams.get('page'));
+  const itemsQuery = searchParams.get('items');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (state.sort) {
+    if (state.search) {
       dispatch({ type: LOADING });
 
-      getItemsAmountSort({
+      getItemsAmountSearch({
         itemsPerPage: state.pagination.itemsPerPage,
-        sortParam: state.sort,
+        searchParam: state.search,
         page: state.pagination.currentPage,
       })
         .then(({ results, totalResults, totalPages }) => {
           dispatch({
-            type: LOAD_SORT_DATA,
+            type: LOAD_SEARCH_DATA,
             payload: { results, totalResults, totalPages },
           });
         })
@@ -56,39 +56,43 @@ export function Movies() {
           dispatch({ type: LOADED });
         });
     }
-  }, [state.sort, state.pagination.currentPage, state.pagination.itemsPerPage]);
+
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [state.search, state.pagination.currentPage, state.pagination.itemsPerPage]);
 
   useEffect(() => {
     dispatch({
-      type: QUERY_PARAM_CHANGE,
-      payload: { sortValue: sortQuery, currentPage: pageQuery, itemsPerPage: itemsQuery },
+      type: SEARCH_PARAM_CHANGE,
+      payload: { searchParams: searchQuery, currentPage: pageQuery, itemsPerPage: itemsQuery },
     });
-  }, [sortQuery, pageQuery, itemsQuery]);
+  }, [searchQuery, pageQuery, itemsQuery]);
 
   return (
     <>
       {state.isLoading && <Loader />}
-      {state.isError && (
-        <div className="search-results">Something went wrong, please try again!</div>
-      )}
       <div className="controls">
-        <Sort
-          sortValue={state.sort}
-          onChange={(value: string) => {
-            setQueryParams({
-              sort: value,
-              items: state.pagination.itemsPerPage,
-            });
-          }}
-        />
+        {state.isError && (
+          <div className="search-results">Something went wrong, please try again!</div>
+        )}
+        {!state.movies.length && !state.isError && (
+          <div className="search-results">No movies found, please try again!</div>
+        )}
+        {!state.isError && !!state.movies.length && (
+          <div className="search-results">
+            <span>{`Over ${state.totalResults} results for `}</span>
+            <span className="search-results__query">{`"${state.search || searchQuery}"`}</span>
+          </div>
+        )}
         <Search inputRef={inputRef} />
       </div>
 
       <div className="movies">
         <div className="movies-wrap">
-          {state.movies.map((mov: MovieType, i: number) => (
+          {state.movies.map((mov: MovieType) => (
             <Movie
-              key={`${mov.id.toString()}${i}`}
+              key={mov.id.toString()}
               movie={mov}
               onMovieClick={() => {
                 navigate(`/${mov.id}`);
@@ -103,12 +107,14 @@ export function Movies() {
           totalPages={state.totalPages}
           currentPage={state.pagination.currentPage}
           onPageClick={(num: number) => {
-            setQueryParams({ ...Object.fromEntries(queryParams.entries()), page: num.toString() });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setSearchParams({
+              ...Object.fromEntries(searchParams.entries()),
+              page: num.toString(),
+            });
           }}
           onChangeItemsPerPage={(amount: number) => {
-            setQueryParams({
-              ...Object.fromEntries(queryParams.entries()),
+            setSearchParams({
+              ...Object.fromEntries(searchParams.entries()),
               items: amount.toString(),
               page: '1',
             });

@@ -18,7 +18,7 @@ export function Movie({ movie, onMovieClick }: MovieParam) {
           <PosterImage className="movie__img" posterPath={posterPath} title={title} height="180" />
         </div>
         <p className="movie__name">{title}</p>
-        <p className="movie__year">{releaseDate.split('-')[0]}</p>
+        <p className="movie__year">{releaseDate ? releaseDate.split('-')[0] : ''}</p>
       </div>
     </>
   );

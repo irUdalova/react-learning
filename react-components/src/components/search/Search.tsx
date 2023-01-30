@@ -1,35 +1,40 @@
-import React from 'react';
+import React, { LegacyRef, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import './Search.css';
 
-type PropsValues = {
-  searchText: string;
-  onChange: (text: string) => void;
-  onSearch: () => void;
+type TSearchParams = {
+  inputRef: LegacyRef<HTMLInputElement>;
 };
 
-export function Search({ searchText, onChange, onSearch }: PropsValues) {
+export function Search({ inputRef = null }: TSearchParams) {
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('search');
+  const [searchText, setSearchText] = useState(searchQuery);
+  const navigate = useNavigate();
   const isSearching = !!searchText;
 
   return (
     <>
       <div className={`search-wrap ${isSearching ? 'search-wrap_active' : ''}`}>
-        <button
+        <label
+          htmlFor="searchInput"
           className="search-wrap__clear-btn"
           onClick={() => {
-            onChange('');
+            setSearchText('');
           }}
-        ></button>
+        ></label>
         <input
+          id="searchInput"
           placeholder="Find your movie"
           type="text"
-          value={searchText}
+          value={searchText || ''}
           onChange={(e) => {
-            onChange(e.target.value);
+            setSearchText(e.target.value);
           }}
+          ref={inputRef}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
-              console.log('search new movies');
-              onSearch();
+              navigate(`/search?search=${searchText}&page=1`);
             }
           }}
           className="search-wrap__search-inp"

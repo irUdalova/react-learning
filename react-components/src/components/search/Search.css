@@ -1,8 +1,7 @@
 .search-wrap {
   border: 1px solid #282c34;
-  margin: 0 auto;
+  margin-left: auto;
   width: 30%;
-  margin-top: 30px;
   position: relative;
 }
 
@@ -24,6 +23,10 @@
 
 .search-wrap__search-inp:focus {
   background-color: white;
+}
+
+.search-wrap__search-inp::placeholder {
+  color: #a5a5a5;
 }
 
 .search-wrap__clear-btn {

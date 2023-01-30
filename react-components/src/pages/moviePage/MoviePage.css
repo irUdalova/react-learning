@@ -1,0 +1,78 @@
+
+.movie-page {
+  display: flex;
+  align-items: flex-start;
+  box-sizing: border-box;
+  background-color: #1a1d22;
+  color: white;
+  font-weight: 200;
+  height: auto;
+  padding: 50px;
+  gap: 20px; 
+}
+
+.movie-page__img-wrap {
+  min-width: 250px;
+  max-width: 350px;
+  height: auto;
+}
+
+.movie-page__img {
+  width: 100%;
+  height: auto;
+ }
+
+.movie-page__description {
+  display: flex;
+  flex-direction: column;
+  min-width: 400px;
+}
+
+.movie-page__title {
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.movie-page__year,
+.movie-page__vote,
+.movie-page__genres,
+.movie-page__runtime  {
+  margin: 10px 0 20px 0; 
+}
+
+.movie-page__overview {
+  border-top: solid 1px white;
+  padding-top: 20px;
+  line-height: 20px;
+  text-align: justify;
+  margin: 0;
+}
+
+.movie-page__tagline {
+  font-style: italic;
+  margin: 0;
+}
+
+.movie-page__back {
+  background-color: transparent;
+  width: 90px;
+  height: 30px;
+  color: white;
+  margin: 0 0 0 50px;
+  font-weight: 200;
+  border: solid 1px white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.movie-page__back:hover {
+  color: #61dafb;
+  border: solid 1px #61dafb;;
+}
+
+
+
+
+
