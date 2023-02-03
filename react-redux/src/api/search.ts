@@ -16,6 +16,8 @@ export const searchMovies = async ({
   const res = await fetch(
     `${URL}?api_key=${API_KEY}&language=en-US&query=${searchParam}&page=${page}&include_adult=false`
   );
-
+  if (!res.ok) {
+    throw new Error('Error');
+  }
   return renameValues(await res.json());
 };

@@ -7,12 +7,11 @@ import { Loader } from 'components/loader/Loader';
 import { MovieType } from 'types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Pagination } from 'components/pagination/Pagination';
-import { getItemsAmountSearch } from 'api/helpers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { searchSlice } from 'store/redusers/searchSlice';
+import { fetchSearchData, searchSlice } from 'store/redusers/searchSlice';
 
 export function SearchPage() {
-  const { searchParamChange, loadSearchData, loading, loaded, error } = searchSlice.actions;
+  const { searchParamChange } = searchSlice.actions;
   const { search, pagination, isLoading, isError, movies, totalResults } = useAppSelector(
     (state) => state.searchReducer
   );
@@ -28,22 +27,13 @@ export function SearchPage() {
 
   useEffect(() => {
     if (search) {
-      dispatch(loading());
-
-      getItemsAmountSearch({
-        itemsPerPage: pagination.itemsPerPage,
-        searchParam: search,
-        page: pagination.currentPage,
-      })
-        .then(({ results, totalResults, totalPages }) => {
-          dispatch(loadSearchData({ results, totalResults, totalPages }));
+      dispatch(
+        fetchSearchData({
+          itemsPerPage: pagination.itemsPerPage,
+          searchParam: search,
+          page: pagination.currentPage,
         })
-        .catch(() => {
-          dispatch(error());
-        })
-        .finally(() => {
-          dispatch(loaded());
-        });
+      );
     }
 
     if (inputRef.current) {
@@ -80,15 +70,17 @@ export function SearchPage() {
 
       <div className="movies">
         <div className="movies-wrap">
-          {movies.map((mov: MovieType) => (
-            <Movie
-              key={mov.id.toString()}
-              movie={mov}
-              onMovieClick={() => {
-                navigate(`/${mov.id}`);
-              }}
-            />
-          ))}
+          {movies.map((mov: MovieType) => {
+            return (
+              <Movie
+                key={mov.id.toString()}
+                movie={mov}
+                onMovieClick={() => {
+                  navigate(`/${mov.id}`);
+                }}
+              />
+            );
+          })}
         </div>
       </div>
       {!!totalResults && (

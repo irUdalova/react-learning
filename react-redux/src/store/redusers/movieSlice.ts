@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IMoviePage, TPayloadLoadMovieData } from 'types';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { getMovie } from 'api/movie';
+import { IMoviePage, MovieTypeFull } from 'types';
 
 const initialState: IMoviePage = {
   movieData: {
@@ -18,25 +19,26 @@ const initialState: IMoviePage = {
   isLoaded: false,
 };
 
+export const fetchMovieData = createAsyncThunk('movie/fetchMovieData', getMovie);
+
 export const movieSlice = createSlice({
   name: 'movie',
   initialState,
-  reducers: {
-    loadMovieData(state, action: PayloadAction<TPayloadLoadMovieData>) {
-      state.movieData = action.payload.movie;
-      state.isLoading = false;
-    },
-    loading(state) {
+  reducers: {},
+  extraReducers: {
+    [fetchMovieData.pending.type]: (state) => {
       state.isError = false;
       state.isLoading = true;
     },
-    loaded(state) {
+    [fetchMovieData.fulfilled.type]: (state, action: PayloadAction<MovieTypeFull>) => {
+      state.movieData = action.payload;
       state.isError = false;
       state.isLoading = false;
       state.isLoaded = true;
     },
-    error(state) {
+    [fetchMovieData.rejected.type]: (state) => {
       state.isError = true;
+      state.isLoading = false;
     },
   },
 });

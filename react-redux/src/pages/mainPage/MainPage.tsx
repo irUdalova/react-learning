@@ -8,12 +8,11 @@ import './MainPage.css';
 import { Loader } from 'components/loader/Loader';
 import { MovieType } from 'types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { getItemsAmountSort } from 'api/helpers';
-import { mainSlice } from 'store/redusers/mainSlice';
+import { fetchSortData, mainSlice } from 'store/redusers/mainSlice';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 
 export function MainPage() {
-  const { queryParamChange, loadSortData, loading, loaded, error } = mainSlice.actions;
+  const { queryParamChange } = mainSlice.actions;
   const { sort, pagination, isLoading, isError, movies, totalResults } = useAppSelector(
     (state) => state.mainReducer
   );
@@ -30,22 +29,13 @@ export function MainPage() {
 
   useEffect(() => {
     if (sort) {
-      dispatch(loading());
-
-      getItemsAmountSort({
-        itemsPerPage: pagination.itemsPerPage,
-        sortParam: sort,
-        page: pagination.currentPage,
-      })
-        .then(({ results, totalResults, totalPages }) => {
-          dispatch(loadSortData({ results, totalPages, totalResults }));
+      dispatch(
+        fetchSortData({
+          itemsPerPage: pagination.itemsPerPage,
+          sortParam: sort,
+          page: pagination.currentPage,
         })
-        .catch(() => {
-          dispatch(error());
-        })
-        .finally(() => {
-          dispatch(loaded());
-        });
+      );
     }
   }, [sort, pagination.currentPage, pagination.itemsPerPage]);
 

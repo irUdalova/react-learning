@@ -2,13 +2,13 @@ import { GetFullMovieResp, GetMovieResp, MovieType, MovieTypeResp } from 'types'
 import { searchMovies } from './search';
 import { sortMovies } from './sort';
 
-type TItemsAmountSort = {
+export type TItemsAmountSort = {
   itemsPerPage: number;
   sortParam: string;
   page: number;
 };
 
-type TItemsAmountSearch = {
+export type TItemsAmountSearch = {
   itemsPerPage: number;
   searchParam: string;
   page: number;
@@ -34,8 +34,6 @@ export function renameValues(response: GetMovieResp) {
 }
 
 export function renameMovieValues(response: GetFullMovieResp) {
-  console.log('response', response);
-
   return {
     id: response.id,
     title: response.title,
@@ -91,6 +89,7 @@ export const getItemsAmountSearch = async ({
 
   for (let i = 0; i < count; i++) {
     const interimResult = await searchMovies({ searchParam, page: apiPage + i });
+
     const totalResults = Math.min(interimResult.totalResults, 10000);
     resultItems = {
       totalResults: interimResult.totalResults,

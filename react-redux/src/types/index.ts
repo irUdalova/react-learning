@@ -70,10 +70,7 @@ export interface CardType {
 //======================use reducer===================
 
 export interface IMainPage {
-  // search: string;
   movies: MovieType[];
-  // isPopupOpen: boolean;
-  // popupMovieID: number;
   totalResults: number;
   isError: boolean;
   isLoading: boolean;
@@ -85,8 +82,6 @@ export interface IMainPage {
 export interface ISearchPage {
   search: string;
   movies: MovieType[];
-  // isPopupOpen: boolean;
-  // popupMovieID: number;
   totalResults: number;
   isError: boolean;
   isLoading: boolean;
@@ -137,25 +132,6 @@ export interface IAppDispatchContextParam {
   dispatch: React.Dispatch<unknown>;
 }
 
-// export type TPayload = {
-//   results?: IMovie[];
-//   totalResults?: number;
-//   totalPages?: number;
-//   searchParams?: string;
-//   popupMovieID?: number;
-//   formData?: ICardType;
-//   url?: string;
-//   date?: string;
-//   name?: string;
-//   country?: string;
-//   isAgreeTerms?: boolean;
-//   isAgreePromo?: boolean;
-//   sortValue?: string | null;
-//   currentPage?: number;
-//   itemsPerPage?: number;
-//   movie?: MovieTypeFull;
-// };
-
 export type TPayloadLoadData = {
   results: MovieType[];
   totalResults: number;
@@ -173,35 +149,3 @@ export type TPayloadSearchParamChange = {
   currentPage: number;
   itemsPerPage: number;
 };
-
-export type TPayloadLoadMovieData = {
-  movie: MovieTypeFull;
-};
-
-export type TPayloadUrl = {
-  url: string;
-};
-
-// export type TPayload = {
-//   results: MovieType[];
-//   totalResults: number;
-//   totalPages: number;
-//   searchParams: string;
-//   popupMovieID: number;
-//   formData: ICardType;
-//   url: string;
-//   date: string;
-//   name: string;
-//   country: string;
-//   isAgreeTerms: boolean;
-//   isAgreePromo: boolean;
-//   sortValue: string | null;
-//   currentPage: number;
-//   itemsPerPage: number;
-//   movie: MovieTypeFull;
-// };
-
-// export type TActionMainReducer = {
-//   type: string;
-//   payload: TPayload;
-// };

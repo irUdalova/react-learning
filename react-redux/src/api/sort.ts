@@ -29,6 +29,8 @@ export const sortMovies = async ({
       sortMap[sortParam as keyof typeof sortMap]
     }&include_adult=false&include_video=false&page=${page}&with_watch_monetization_types=flatrate`
   );
-
+  if (!res.ok) {
+    throw new Error('Error');
+  }
   return renameValues(await res.json());
 };

@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { getItemsAmountSearch } from 'api/helpers';
 import { ISearchPage, TPayloadLoadData, TPayloadSearchParamChange } from 'types';
 
 const initialState: ISearchPage = {
@@ -15,6 +16,8 @@ const initialState: ISearchPage = {
   },
 };
 
+export const fetchSearchData = createAsyncThunk('search/fetchSearchData', getItemsAmountSearch);
+
 export const searchSlice = createSlice({
   name: 'search',
   initialState,
@@ -26,23 +29,23 @@ export const searchSlice = createSlice({
       state.pagination.itemsPerPage =
         action.payload.itemsPerPage || initialState.pagination.itemsPerPage;
     },
-    loadSearchData(state, action: PayloadAction<TPayloadLoadData>) {
-      state.movies = action.payload.results;
-      state.totalResults = action.payload.totalResults;
-      state.pagination.totalPages = action.payload.totalPages;
-      state.isLoading = false;
-    },
-    loading(state) {
+  },
+  extraReducers: {
+    [fetchSearchData.pending.type]: (state) => {
       state.isError = false;
       state.isLoading = true;
     },
-    loaded(state) {
+    [fetchSearchData.fulfilled.type]: (state, action: PayloadAction<TPayloadLoadData>) => {
       state.isError = false;
       state.isLoading = false;
       state.isLoaded = true;
+      state.movies = action.payload.results;
+      state.totalResults = action.payload.totalResults;
+      state.pagination.totalPages = action.payload.totalPages;
     },
-    error(state) {
+    [fetchSearchData.rejected.type]: (state) => {
       state.isError = true;
+      state.isLoading = false;
     },
   },
 });

@@ -17,6 +17,8 @@ export function setupStore() {
   });
 }
 
+export const store = setupStore();
+
 export type TAppReducer = ReturnType<typeof appReducer>;
 export type TAppStore = ReturnType<typeof setupStore>;
 export type TAppDispatch = TAppStore['dispatch'];

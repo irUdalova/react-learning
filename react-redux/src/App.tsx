@@ -8,12 +8,10 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { SearchPage } from 'pages/searchPage/SearchPage';
 import { MoviePage } from 'pages/moviePage/MoviePage';
-import { setupStore } from 'store/store';
+import { store } from 'store/store';
 import { Provider } from 'react-redux';
 
 export default function App() {
-  const store = setupStore();
-
   return (
     <Provider store={store}>
       <Routes>
