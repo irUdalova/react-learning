@@ -8,14 +8,20 @@ import { MovieType } from 'types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Pagination } from 'components/pagination/Pagination';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { fetchSearchData, searchSlice } from 'store/redusers/searchSlice';
+import { searchSlice } from 'store/redusers/searchSlice';
+import { useGetSearchMoviesQuery } from 'store/mdbAPI/api';
 
 export function SearchPage() {
   const { searchParamChange } = searchSlice.actions;
-  const { search, pagination, isLoading, isError, movies, totalResults } = useAppSelector(
-    (state) => state.searchReducer
-  );
+
+  const { search, pagination } = useAppSelector((state) => state.searchReducer);
   const dispatch = useAppDispatch();
+
+  const { data, isLoading, isError } = useGetSearchMoviesQuery({
+    searchParam: search,
+    page: pagination.currentPage,
+    itemsPerPage: pagination.itemsPerPage,
+  });
 
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -24,22 +30,6 @@ export function SearchPage() {
   const pageQuery = Number(searchParams.get('page'));
   const itemsQuery = Number(searchParams.get('items'));
   const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (search) {
-      dispatch(
-        fetchSearchData({
-          itemsPerPage: pagination.itemsPerPage,
-          searchParam: search,
-          page: pagination.currentPage,
-        })
-      );
-    }
-
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [search, pagination.currentPage, pagination.itemsPerPage]);
 
   useEffect(() => {
     dispatch(
@@ -56,12 +46,12 @@ export function SearchPage() {
       {isLoading && <Loader />}
       <div className="controls">
         {isError && <div className="search-results">Something went wrong, please try again!</div>}
-        {!movies.length && !isError && (
+        {!data?.results.length && !isError && (
           <div className="search-results">No movies found, please try again!</div>
         )}
-        {!isError && !!movies.length && (
+        {!isError && !!data?.results.length && (
           <div className="search-results">
-            <span>{`Over ${totalResults} results for `}</span>
+            <span>{`Over ${data.totalResults} results for `}</span>
             <span className="search-results__query">{`"${search || searchQuery}"`}</span>
           </div>
         )}
@@ -70,7 +60,7 @@ export function SearchPage() {
 
       <div className="movies">
         <div className="movies-wrap">
-          {movies.map((mov: MovieType) => {
+          {data?.results.map((mov: MovieType) => {
             return (
               <Movie
                 key={mov.id.toString()}
@@ -83,10 +73,10 @@ export function SearchPage() {
           })}
         </div>
       </div>
-      {!!totalResults && (
+      {!!data?.totalResults && (
         <Pagination
           itemsPerPage={pagination.itemsPerPage}
-          totalPages={pagination.totalPages}
+          totalPages={data?.totalPages}
           currentPage={pagination.currentPage}
           onPageClick={(num: number) => {
             setSearchParams({

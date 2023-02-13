@@ -1,10 +1,9 @@
 // import { getMovie } from 'api/movie';
 import { Loader } from 'components/loader/Loader';
 import { PosterImage } from 'components/poster/PosterImage';
-import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchMovieData } from 'store/redusers/movieSlice';
+import { useGetMovieQuery } from 'store/mdbAPI/api';
 import './MoviePage.css';
 
 type TGenre = {
@@ -13,19 +12,13 @@ type TGenre = {
 };
 
 export function MoviePage() {
-  const { title, posterPath, releaseDate, overview, genres, tagline, vote, runtime } =
-    useAppSelector((state) => state.movieReducer.movieData);
-  const { isError, isLoading, isLoaded } = useAppSelector((state) => state.movieReducer);
-  const dispatch = useAppDispatch();
   const { id } = useParams();
   const movieId = Number(id);
 
+  const { data, isLoading, isError, isSuccess } = useGetMovieQuery({ id: movieId });
+
   const navigate = useNavigate();
   const goBack = () => navigate(-1);
-
-  useEffect(() => {
-    dispatch(fetchMovieData({ id: movieId }));
-  }, [movieId]);
 
   if (isLoading) return <Loader />;
 
@@ -35,40 +28,42 @@ export function MoviePage() {
       <button type="button" className="movie-page__back" onClick={goBack}>
         {`❮ back`}
       </button>
-      {isLoaded && (
+      {isSuccess && (
         <React.Fragment>
           <div className="movie-page">
             <div className="movie-page__img-wrap">
               <PosterImage
-                posterPath={posterPath}
-                title={title}
+                posterPath={data.posterPath}
+                title={data.title}
                 className="movie-page__img"
                 height="180"
               />
             </div>
             <div className="movie-page__description">
-              <p className="movie-page__title">{title}</p>
-              {!!tagline && <p className="movie-page__tagline">{tagline}</p>}
-              {!!releaseDate && <p className="movie-page__year">{releaseDate.split('-')[0]}</p>}
-              {!!vote && (
+              <p className="movie-page__title">{data.title}</p>
+              {!!data.tagline && <p className="movie-page__tagline">{data.tagline}</p>}
+              {!!data.releaseDate && (
+                <p className="movie-page__year">{data.releaseDate.split('-')[0]}</p>
+              )}
+              {!!data.vote && (
                 <p className="movie-page__vote">
                   <span>Rate: </span>
-                  {vote.toFixed(1)}
+                  {data.vote.toFixed(1)}
                 </p>
               )}
-              {!!genres.length && (
+              {!!data.genres.length && (
                 <p className="movie-page__genres">
                   <span>Genres: </span>
-                  <span>{genres.map((genre: TGenre) => genre.name).join(', ')}</span>
+                  <span>{data.genres.map((genre: TGenre) => genre.name).join(', ')}</span>
                 </p>
               )}
-              {!!runtime && (
+              {!!data.runtime && (
                 <p className="movie-page__runtime">
                   <span>Runtime: </span>
-                  {runtime} <span>min</span>
+                  {data.runtime} <span>min</span>
                 </p>
               )}
-              <p className="movie-page__overview">{overview}</p>
+              <p className="movie-page__overview">{data.overview}</p>
             </div>
           </div>
         </React.Fragment>

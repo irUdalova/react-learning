@@ -8,15 +8,21 @@ import './MainPage.css';
 import { Loader } from 'components/loader/Loader';
 import { MovieType } from 'types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { fetchSortData, mainSlice } from 'store/redusers/mainSlice';
+import { mainSlice } from 'store/redusers/mainSlice';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
+import { useGetSortMoviesQuery } from 'store/mdbAPI/api';
 
 export function MainPage() {
   const { queryParamChange } = mainSlice.actions;
-  const { sort, pagination, isLoading, isError, movies, totalResults } = useAppSelector(
-    (state) => state.mainReducer
-  );
+
+  const { sort, pagination } = useAppSelector((state) => state.mainReducer);
   const dispatch = useAppDispatch();
+
+  const { data, isLoading, isError } = useGetSortMoviesQuery({
+    sortParam: sort,
+    page: pagination.currentPage,
+    itemsPerPage: pagination.itemsPerPage,
+  });
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -26,18 +32,6 @@ export function MainPage() {
   const sortQuery = queryParams.get('sort');
   const pageQuery = Number(queryParams.get('page'));
   const itemsQuery = Number(queryParams.get('items'));
-
-  useEffect(() => {
-    if (sort) {
-      dispatch(
-        fetchSortData({
-          itemsPerPage: pagination.itemsPerPage,
-          sortParam: sort,
-          page: pagination.currentPage,
-        })
-      );
-    }
-  }, [sort, pagination.currentPage, pagination.itemsPerPage]);
 
   useEffect(() => {
     dispatch(
@@ -68,7 +62,7 @@ export function MainPage() {
 
       <div className="movies">
         <div className="movies-wrap">
-          {movies.map((mov: MovieType, i: number) => (
+          {data?.results.map((mov: MovieType, i: number) => (
             <Movie
               key={`${mov.id.toString()}${i}`}
               movie={mov}
@@ -79,10 +73,10 @@ export function MainPage() {
           ))}
         </div>
       </div>
-      {!!totalResults && (
+      {!!data?.totalResults && (
         <Pagination
           itemsPerPage={pagination.itemsPerPage}
-          totalPages={pagination.totalPages}
+          totalPages={data?.totalPages}
           currentPage={pagination.currentPage}
           onPageClick={(num: number) => {
             setQueryParams({ ...Object.fromEntries(queryParams.entries()), page: num.toString() });

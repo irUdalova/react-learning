@@ -1,3 +1,5 @@
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/fetchBaseQuery';
+
 export interface MovieTypeResp {
   id: number;
   title: string;
@@ -6,11 +8,12 @@ export interface MovieTypeResp {
   overview?: string;
 }
 
-export interface GetMovieResp {
-  page: number;
-  results: MovieTypeResp[];
-  total_results: number;
-  total_pages: number;
+export interface MovieTypeRespRenamed {
+  id: number;
+  title: string;
+  posterPath: string;
+  releaseDate: string;
+  overview?: string;
 }
 
 export interface GetFullMovieResp {
@@ -23,6 +26,26 @@ export interface GetFullMovieResp {
   runtime: string;
   overview?: string;
   vote_average: number;
+}
+
+export interface MovieTypeFull {
+  id: number;
+  title: string;
+  genres: IGenres[];
+  posterPath: string;
+  releaseDate: string;
+  tagline: string;
+  runtime: string;
+  overview?: string;
+  vote: number;
+}
+
+export interface GetMovieResp {
+  page: number;
+  results: GetFullMovieResp[];
+  total_results: number;
+  total_pages: number;
+  error?: FetchBaseQueryError;
 }
 
 export interface MovieType {
@@ -45,18 +68,6 @@ export interface IGenres {
   name: string;
 }
 
-export interface MovieTypeFull {
-  id: number;
-  title: string;
-  genres: IGenres[];
-  posterPath: string;
-  releaseDate: string;
-  tagline: string;
-  runtime: string;
-  overview?: string;
-  vote: number;
-}
-
 export interface CardType {
   id: number;
   url: string;
@@ -71,10 +82,6 @@ export interface CardType {
 
 export interface IMainPage {
   movies: MovieType[];
-  totalResults: number;
-  isError: boolean;
-  isLoading: boolean;
-  isLoaded: boolean;
   sort: string;
   pagination: IPagination;
 }
@@ -82,17 +89,12 @@ export interface IMainPage {
 export interface ISearchPage {
   search: string;
   movies: MovieType[];
-  totalResults: number;
-  isError: boolean;
-  isLoading: boolean;
-  isLoaded: boolean;
   pagination: IPagination;
 }
 
 export interface IPagination {
   currentPage: number;
   itemsPerPage: number;
-  totalPages: number;
 }
 
 export interface IMoviePage {

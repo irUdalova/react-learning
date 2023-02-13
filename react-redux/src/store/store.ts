@@ -1,19 +1,21 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { mdbApi } from './mdbAPI/api';
 import { formReducer } from './redusers/formSlice';
 import { mainReducer } from './redusers/mainSlice';
-import { movieReducer } from './redusers/movieSlice';
 import { searchReducer } from './redusers/searchSlice';
 
 const appReducer = combineReducers({
   mainReducer,
   searchReducer,
-  movieReducer,
   formReducer,
+  [mdbApi.reducerPath]: mdbApi.reducer,
 });
 
 export function setupStore() {
   return configureStore({
     reducer: appReducer,
+    middleware: (curryGetDefaultMiddleware) =>
+      curryGetDefaultMiddleware().concat(mdbApi.middleware),
   });
 }
 
