@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { getItemsAmountSort, TItemsAmountSort } from 'api/helpers';
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { error, loadSortData } from 'store/redusers/mainSlice';
+import { error, loading, loadSortData } from 'store/redusers/mainSlice';
 import { TPayloadLoadData } from 'types';
 import { LOAD_MAIN_DATA } from './constants';
 
@@ -12,6 +12,7 @@ export const loadMainDataSaga = (payload: TItemsAmountSort) => ({
 
 function* loadSortDataWorker(action: PayloadAction<TItemsAmountSort>) {
   try {
+    yield put(loading());
     const data: TPayloadLoadData = yield call(getItemsAmountSort, action.payload);
     yield put(loadSortData(data));
   } catch {

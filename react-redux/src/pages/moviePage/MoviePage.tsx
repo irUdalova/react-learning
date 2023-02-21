@@ -3,7 +3,6 @@ import { PosterImage } from 'components/poster/PosterImage';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { clearMovieData } from 'store/redusers/movieSlice';
 import { loadMovieDataSaga } from 'store/saga/movieSaga';
 import './MoviePage.css';
 
@@ -27,12 +26,6 @@ export function MoviePage() {
   useEffect(() => {
     dispatch(loadMovieDataSaga({ id: movieId }));
   }, [movieId]);
-
-  useEffect(() => {
-    return () => {
-      dispatch(clearMovieData());
-    };
-  }, []);
 
   if (isLoading) return <Loader />;
 

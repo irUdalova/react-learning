@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { getMovie, TGetMovie } from 'api/movie';
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { error, loadMovieData } from 'store/redusers/movieSlice';
+import { error, loading, loadMovieData } from 'store/redusers/movieSlice';
 import { MovieTypeFull } from 'types';
 import { LOAD_MOVIE_DATA } from './constants';
 
@@ -12,6 +12,7 @@ export const loadMovieDataSaga = (payload: TGetMovie) => ({
 
 function* loadMovieDataWorker(action: PayloadAction<TGetMovie>) {
   try {
+    yield put(loading());
     const data: MovieTypeFull = yield call(getMovie, action.payload);
     yield put(loadMovieData(data));
   } catch {

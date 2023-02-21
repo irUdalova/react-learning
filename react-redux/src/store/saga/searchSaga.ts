@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { getItemsAmountSearch, TItemsAmountSearch } from 'api/helpers';
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { error, loadSearchData } from 'store/redusers/searchSlice';
+import { error, loading, loadSearchData } from 'store/redusers/searchSlice';
 import { TPayloadLoadData } from 'types';
 import { LOAD_SEARCH_DATA } from './constants';
 
@@ -12,6 +12,7 @@ export const loadSearchDataSaga = (payload: TItemsAmountSearch) => ({
 
 function* loadSearchDataWorker(action: PayloadAction<TItemsAmountSearch>) {
   try {
+    yield put(loading());
     const data: TPayloadLoadData = yield call(getItemsAmountSearch, action.payload);
     yield put(loadSearchData(data));
   } catch {

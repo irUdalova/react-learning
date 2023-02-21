@@ -36,11 +36,8 @@ export const movieSlice = createSlice({
       state.isError = true;
       state.isLoading = false;
     },
-    clearMovieData(state) {
-      state.movieData = initialState.movieData;
-    },
   },
 });
 
 export const movieReducer = movieSlice.reducer;
-export const { loadMovieData, loading, error, clearMovieData } = movieSlice.actions;
+export const { loadMovieData, loading, error } = movieSlice.actions;
