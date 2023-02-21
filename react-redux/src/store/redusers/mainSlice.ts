@@ -1,5 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getItemsAmountSort } from 'api/helpers';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IMainPage, TPayloadLoadData, TPayloadQueryParamChange } from 'types';
 
 const initialState: IMainPage = {
@@ -16,8 +15,6 @@ const initialState: IMainPage = {
   },
 };
 
-export const fetchSortData = createAsyncThunk('main/fetchSortData', getItemsAmountSort);
-
 export const mainSlice = createSlice({
   name: 'main',
   initialState,
@@ -29,25 +26,23 @@ export const mainSlice = createSlice({
       state.pagination.itemsPerPage =
         action.payload.itemsPerPage || initialState.pagination.itemsPerPage;
     },
-  },
-  extraReducers: {
-    [fetchSortData.pending.type]: (state) => {
-      state.isError = false;
-      state.isLoading = true;
-    },
-    [fetchSortData.fulfilled.type]: (state, action: PayloadAction<TPayloadLoadData>) => {
-      state.isError = false;
-      state.isLoading = false;
-      state.isLoaded = true;
+    loadSortData(state, action: PayloadAction<TPayloadLoadData>) {
       state.movies = action.payload.results;
       state.totalResults = action.payload.totalResults;
       state.pagination.totalPages = action.payload.totalPages;
-    },
-    [fetchSortData.rejected.type]: (state) => {
-      state.isError = true;
       state.isLoading = false;
+      state.isLoaded = true;
+    },
+    loading(state) {
+      state.isError = false;
+      state.isLoading = true;
+    },
+    error(state) {
+      state.isLoading = false;
+      state.isError = true;
     },
   },
 });
 
 export const mainReducer = mainSlice.reducer;
+export const { queryParamChange, loadSortData, loading, error } = mainSlice.actions;

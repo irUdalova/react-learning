@@ -2,7 +2,7 @@ import { MovieTypeFull } from 'types';
 import { renameMovieValues } from './helpers';
 import { API_KEY } from './key';
 
-type TGetMovie = {
+export type TGetMovie = {
   id: number;
 };
 

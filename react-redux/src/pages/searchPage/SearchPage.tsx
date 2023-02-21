@@ -8,7 +8,8 @@ import { MovieType } from 'types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Pagination } from 'components/pagination/Pagination';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { fetchSearchData, searchSlice } from 'store/redusers/searchSlice';
+import { searchSlice } from 'store/redusers/searchSlice';
+import { loadSearchDataSaga } from 'store/saga/searchSaga';
 
 export function SearchPage() {
   const { searchParamChange } = searchSlice.actions;
@@ -28,7 +29,7 @@ export function SearchPage() {
   useEffect(() => {
     if (search) {
       dispatch(
-        fetchSearchData({
+        loadSearchDataSaga({
           itemsPerPage: pagination.itemsPerPage,
           searchParam: search,
           page: pagination.currentPage,

@@ -8,8 +8,9 @@ import './MainPage.css';
 import { Loader } from 'components/loader/Loader';
 import { MovieType } from 'types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { fetchSortData, mainSlice } from 'store/redusers/mainSlice';
+import { mainSlice } from 'store/redusers/mainSlice';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
+import { loadMainDataSaga } from 'store/saga/mainSaga';
 
 export function MainPage() {
   const { queryParamChange } = mainSlice.actions;
@@ -30,7 +31,7 @@ export function MainPage() {
   useEffect(() => {
     if (sort) {
       dispatch(
-        fetchSortData({
+        loadMainDataSaga({
           itemsPerPage: pagination.itemsPerPage,
           sortParam: sort,
           page: pagination.currentPage,

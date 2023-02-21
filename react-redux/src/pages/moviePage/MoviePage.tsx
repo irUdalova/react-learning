@@ -1,10 +1,10 @@
-// import { getMovie } from 'api/movie';
 import { Loader } from 'components/loader/Loader';
 import { PosterImage } from 'components/poster/PosterImage';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchMovieData } from 'store/redusers/movieSlice';
+import { clearMovieData } from 'store/redusers/movieSlice';
+import { loadMovieDataSaga } from 'store/saga/movieSaga';
 import './MoviePage.css';
 
 type TGenre = {
@@ -15,6 +15,7 @@ type TGenre = {
 export function MoviePage() {
   const { title, posterPath, releaseDate, overview, genres, tagline, vote, runtime } =
     useAppSelector((state) => state.movieReducer.movieData);
+
   const { isError, isLoading, isLoaded } = useAppSelector((state) => state.movieReducer);
   const dispatch = useAppDispatch();
   const { id } = useParams();
@@ -24,8 +25,14 @@ export function MoviePage() {
   const goBack = () => navigate(-1);
 
   useEffect(() => {
-    dispatch(fetchMovieData({ id: movieId }));
+    dispatch(loadMovieDataSaga({ id: movieId }));
   }, [movieId]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearMovieData());
+    };
+  }, []);
 
   if (isLoading) return <Loader />;
 
@@ -39,12 +46,15 @@ export function MoviePage() {
         <React.Fragment>
           <div className="movie-page">
             <div className="movie-page__img-wrap">
-              <PosterImage
-                posterPath={posterPath}
-                title={title}
-                className="movie-page__img"
-                height="180"
-              />
+              {posterPath && (
+                <PosterImage
+                  key={posterPath}
+                  posterPath={posterPath}
+                  title={title}
+                  className="movie-page__img"
+                  height="180"
+                />
+              )}
             </div>
             <div className="movie-page__description">
               <p className="movie-page__title">{title}</p>
